@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dragon Court Puzzle</title>
+  <style>
+    :root {
+      --ink: #2b1d22;
+      --paper: #fff6dd;
+      --panel: #fffaf0;
+      --rose: #ff8aa0;
+      --gold: #ffc857;
+      --mint: #90ddb2;
+      --sky: #9bd0ff;
+      --violet: #bda8ff;
+      --ruby: #d94c4c;
+      --shadow: #2b1d22;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255, 138, 160, 0.28), transparent 17rem),
+        radial-gradient(circle at 86% 10%, rgba(155, 208, 255, 0.35), transparent 18rem),
+        linear-gradient(135deg, #fff6dd 0%, #f2fff4 52%, #f8efff 100%);
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+    }
+
+    .page {
+      width: min(1200px, calc(100vw - 28px));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 18px 0 28px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+    }
+
+    header {
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: rgba(255, 250, 240, 0.9);
+      box-shadow: 7px 7px 0 var(--shadow);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 48px);
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: #654b54;
+      font-weight: 900;
+    }
+
+    .badge {
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--sky);
+      box-shadow: 4px 4px 0 var(--shadow);
+      padding: 8px 11px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .layout {
+      min-height: 690px;
+      display: grid;
+      grid-template-columns: 215px 1fr 215px;
+      grid-template-rows: 180px 1fr 180px;
+      grid-template-areas:
+        "rhaenyra puzzle daemon"
+        "score puzzle words"
+        "alicent puzzle viserys";
+      gap: 14px;
+    }
+
+    .panel,
+    .puzzle {
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: rgba(255, 250, 240, 0.92);
+      box-shadow: 6px 6px 0 var(--shadow);
+    }
+
+    .panel {
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .rhaenyra { grid-area: rhaenyra; background: #fff0f4; }
+    .daemon { grid-area: daemon; background: #f3f0ff; }
+    .alicent { grid-area: alicent; background: #f2fff4; }
+    .viserys { grid-area: viserys; background: #fff5df; }
+    .score-panel { grid-area: score; background: #eff8ff; }
+    .word-panel { grid-area: words; background: #fff1df; }
+
+    .doll-card {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      place-items: center;
+      gap: 5px;
+      text-align: center;
+    }
+
+    .doll {
+      width: 130px;
+      height: 120px;
+      position: relative;
+    }
+
+    .hair {
+      position: absolute;
+      left: 31px;
+      top: 5px;
+      width: 68px;
+      height: 72px;
+      border: 4px solid var(--ink);
+      border-radius: 38px 38px 28px 28px;
+      background: #f7e7c6;
+    }
+
+    .hair.dark {
+      background: #6a4033;
+    }
+
+    .hair.silver {
+      background: #eee8dc;
+    }
+
+    .face {
+      position: absolute;
+      left: 38px;
+      top: 26px;
+      width: 54px;
+      height: 50px;
+      border: 4px solid var(--ink);
+      border-radius: 50%;
+      background: #ffd7b8;
+      z-index: 2;
+    }
+
+    .eye {
+      position: absolute;
+      top: 19px;
+      width: 6px;
+      height: 6px;
+      background: var(--ink);
+      border-radius: 50%;
+    }
+
+    .eye.left { left: 14px; }
+    .eye.right { right: 14px; }
+
+    .smile {
+      position: absolute;
+      left: 17px;
+      top: 29px;
+      width: 18px;
+      height: 8px;
+      border-bottom: 4px solid var(--ink);
+      border-radius: 0 0 18px 18px;
+    }
+
+    .body {
+      position: absolute;
+      left: 30px;
+      bottom: 4px;
+      width: 70px;
+      height: 52px;
+      border: 4px solid var(--ink);
+      border-radius: 28px 28px 10px 10px;
+      background: var(--rose);
+    }
+
+    .body.black { background: #3b3137; }
+    .body.green { background: #83d79d; }
+    .body.gold { background: #ffc857; }
+
+    .crown {
+      position: absolute;
+      left: 43px;
+      top: 0;
+      width: 45px;
+      height: 24px;
+      border: 4px solid var(--ink);
+      background: var(--gold);
+      clip-path: polygon(0 100%, 0 38%, 22% 72%, 50% 0, 78% 72%, 100% 38%, 100% 100%);
+      z-index: 4;
+    }
+
+    .cape {
+      position: absolute;
+      left: 20px;
+      bottom: 2px;
+      width: 90px;
+      height: 55px;
+      border: 4px solid var(--ink);
+      border-radius: 18px 18px 12px 12px;
+      background: var(--ruby);
+      z-index: 0;
+    }
+
+    .name {
+      width: 100%;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      padding: 6px 8px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .puzzle {
+      grid-area: puzzle;
+      position: relative;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 14px;
+      overflow: hidden;
+    }
+
+    .puzzle::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 3px dashed rgba(43, 29, 34, 0.22);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    .topline,
+    .controls {
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .board {
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      min-height: 420px;
+    }
+
+    .word-box {
+      width: min(560px, 94%);
+      min-height: 330px;
+      border: 5px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 9px 9px 0 var(--shadow);
+      padding: 20px;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .prompt {
+      margin: 0;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #705662;
+    }
+
+    .clue {
+      min-height: 42px;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .tiles {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 128px;
+    }
+
+    .tile {
+      width: 54px;
+      height: 60px;
+      display: grid;
+      place-items: center;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fff1a8;
+      box-shadow: 4px 4px 0 var(--shadow);
+      font-size: 30px;
+      font-weight: 900;
+      user-select: none;
+    }
+
+    .answer-track {
+      min-height: 58px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .answer-slot {
+      width: 42px;
+      height: 46px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #eef8ff;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    input {
+      flex: 1 1 260px;
+      min-width: 0;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      padding: 13px 14px;
+      font: inherit;
+      font-size: 20px;
+      font-weight: 900;
+      outline: none;
+      color: var(--ink);
+      background: white;
+    }
+
+    input:focus {
+      box-shadow: 0 0 0 5px rgba(255, 200, 87, 0.45);
+    }
+
+    button {
+      cursor: pointer;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 12px 15px;
+      font: inherit;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 4px 4px 0 var(--shadow);
+    }
+
+    button:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0 var(--shadow);
+    }
+
+    .numbers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .number-card {
+      min-height: 80px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .number-card strong {
+      font-size: 34px;
+      line-height: 1;
+    }
+
+    .small-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .small-text {
+      margin: 8px 0 0;
+      font-size: 14px;
+      font-weight: 900;
+      color: #604955;
+    }
+
+    .word-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .slot {
+      min-height: 29px;
+      border: 3px solid var(--ink);
+      border-radius: 7px;
+      background: white;
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .slot.done {
+      background: var(--mint);
+    }
+
+    .junior-row {
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 11px;
+    }
+
+    .mini {
+      width: 70px;
+      height: 84px;
+      position: relative;
+    }
+
+    .mini .hair {
+      left: 17px;
+      width: 36px;
+      height: 45px;
+      border-width: 3px;
+    }
+
+    .mini .face {
+      left: 20px;
+      top: 19px;
+      width: 31px;
+      height: 31px;
+      border-width: 3px;
+    }
+
+    .mini .eye {
+      top: 11px;
+      width: 4px;
+      height: 4px;
+    }
+
+    .mini .eye.left { left: 8px; }
+    .mini .eye.right { right: 8px; }
+    .mini .smile { left: 10px; top: 18px; width: 10px; height: 5px; border-bottom-width: 3px; }
+
+    .mini .body {
+      left: 16px;
+      width: 39px;
+      height: 36px;
+      border-width: 3px;
+      bottom: 4px;
+    }
+
+    .celebration {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(255, 246, 221, 0.96);
+      text-align: center;
+    }
+
+    .celebration.show {
+      display: grid;
+    }
+
+    .party-box {
+      max-width: 650px;
+      border: 5px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 9px 9px 0 var(--shadow);
+      padding: 24px;
+    }
+
+    .party-box h2 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 6vw, 56px);
+      line-height: 1;
+    }
+
+    .party-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .cheer {
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff0f4;
+      padding: 9px;
+      font-weight: 900;
+    }
+
+    .confetti {
+      position: absolute;
+      top: -30px;
+      width: 12px;
+      height: 18px;
+      background: var(--rose);
+      animation: fall 2.7s infinite linear;
+    }
+
+    .confetti:nth-child(2n) { background: var(--sky); animation-delay: 0.3s; }
+    .confetti:nth-child(3n) { background: var(--gold); animation-delay: 0.7s; }
+    .confetti:nth-child(4n) { background: var(--mint); animation-delay: 1.1s; }
+
+    @keyframes fall {
+      to {
+        transform: translateY(780px) rotate(460deg);
+      }
+    }
+
+    @media (max-width: 940px) {
+      .layout {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto minmax(560px, 1fr) auto auto;
+        grid-template-areas:
+          "rhaenyra daemon"
+          "score words"
+          "puzzle puzzle"
+          "alicent viserys";
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header,
+      .topline,
+      .controls {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "rhaenyra"
+          "daemon"
+          "score"
+          "puzzle"
+          "words"
+          "alicent"
+          "viserys";
+      }
+
+      .party-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1>Dragon Court Puzzle</h1>
+        <p class="subtitle">Unscramble the royal words with cute cartoon doll heroes cheering you on.</p>
+      </div>
+      <div class="badge">House of the Tiny Dragon</div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel rhaenyra">
+        <div class="doll-card">
+          <div class="doll" aria-label="Cute cartoon doll of Rhaenyra">
+            <div class="cape"></div>
+            <div class="hair silver"></div>
+            <div class="crown"></div>
+            <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+            <div class="body"></div>
+          </div>
+          <div class="name">Rhaenyra</div>
+        </div>
+      </aside>
+
+      <aside class="panel daemon">
+        <div class="doll-card">
+          <div class="doll" aria-label="Cute cartoon doll of Daemon">
+            <div class="cape"></div>
+            <div class="hair silver"></div>
+            <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+            <div class="body black"></div>
+          </div>
+          <div class="name">Daemon</div>
+        </div>
+      </aside>
+
+      <aside class="panel score-panel">
+        <p class="small-title">Score Board</p>
+        <div class="numbers">
+          <div class="number-card"><strong id="score">0</strong><span>Score</span></div>
+          <div class="number-card"><strong id="timer">75</strong><span>Time</span></div>
+        </div>
+        <p class="small-text" id="message">Choose the correct royal word.</p>
+        <div class="junior-row">
+          <div>
+            <div class="mini" aria-label="Cute cartoon doll of Luke">
+              <div class="hair dark"></div>
+              <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+              <div class="body" style="background:#9bd0ff"></div>
+            </div>
+            <div class="name">Luke</div>
+          </div>
+          <div>
+            <div class="mini" aria-label="Cute cartoon doll of Jace">
+              <div class="hair dark"></div>
+              <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+              <div class="body" style="background:#bda8ff"></div>
+            </div>
+            <div class="name">Jace</div>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="panel word-panel">
+        <p class="small-title">Solved Boxes</p>
+        <div class="word-list" id="wordList"></div>
+      </aside>
+
+      <aside class="panel alicent">
+        <div class="doll-card">
+          <div class="doll" aria-label="Cute cartoon doll of Alicent">
+            <div class="hair dark"></div>
+            <div class="crown"></div>
+            <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+            <div class="body green"></div>
+          </div>
+          <div class="name">Alicent</div>
+        </div>
+      </aside>
+
+      <aside class="panel viserys">
+        <div class="doll-card">
+          <div class="doll" aria-label="Cute cartoon doll of Viserys">
+            <div class="cape" style="background:#ffc857"></div>
+            <div class="hair silver"></div>
+            <div class="crown"></div>
+            <div class="face"><span class="eye left"></span><span class="eye right"></span><span class="smile"></span></div>
+            <div class="body gold"></div>
+          </div>
+          <div class="name">Viserys</div>
+        </div>
+      </aside>
+
+      <section class="puzzle">
+        <div class="topline">
+          <span class="badge" id="round">Puzzle 1 of 7</span>
+          <span class="badge" id="helper">Rhaenyra is cheering.</span>
+        </div>
+
+        <div class="board">
+          <div class="word-box">
+            <p class="prompt">Unscramble this puzzle</p>
+            <p class="clue" id="clue">A cute fire-breathing friend</p>
+            <div class="tiles" id="tiles"></div>
+            <div class="answer-track" id="answerTrack"></div>
+          </div>
+        </div>
+
+        <form class="controls" id="puzzleForm">
+          <input id="answer" autocomplete="off" placeholder="Type the solved word" aria-label="Type the solved word">
+          <button type="submit">Solve</button>
+          <button type="button" id="shuffleButton">Shuffle</button>
+        </form>
+
+        <div class="celebration" id="celebration">
+          <span class="confetti" style="left:8%"></span>
+          <span class="confetti" style="left:19%"></span>
+          <span class="confetti" style="left:31%"></span>
+          <span class="confetti" style="left:48%"></span>
+          <span class="confetti" style="left:63%"></span>
+          <span class="confetti" style="left:77%"></span>
+          <span class="confetti" style="left:91%"></span>
+          <div class="party-box">
+            <h2>The Court Celebrates!</h2>
+            <p class="small-text">Every cartoon doll cheers because you solved the dragon puzzle.</p>
+            <div class="party-grid">
+              <div class="cheer">Rhaenyra raises the cupcake banner.</div>
+              <div class="cheer">Daemon does one dramatic clap.</div>
+              <div class="cheer">Alicent declares snack peace.</div>
+              <div class="cheer">Luke high-fives the tiny dragon.</div>
+              <div class="cheer">Jace guards the pudding table.</div>
+              <div class="cheer">Viserys announces nap time.</div>
+            </div>
+            <button type="button" onclick="restartGame()">Play Again</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const puzzles = [
+      { word: "DRAGON", clue: "A cute fire-breathing friend" },
+      { word: "CROWN", clue: "A shiny royal head hat" },
+      { word: "THRONE", clue: "A fancy chair with too much drama" },
+      { word: "CASTLE", clue: "A stone home for royal snacks" },
+      { word: "RIDER", clue: "A person who flies with a dragon" },
+      { word: "FLAME", clue: "A tiny spicy sparkle" },
+      { word: "FEAST", clue: "A royal dinner with suspicious pudding" }
+    ];
+
+    const helpers = [
+      "Rhaenyra is cheering.",
+      "Daemon says: acceptable puzzle power.",
+      "Alicent offers very organized hints.",
+      "Luke believes in your keyboard.",
+      "Jace is guarding the answer boxes.",
+      "Viserys is proud and slightly sleepy."
+    ];
+
+    let current = 0;
+    let score = 0;
+    let seconds = 75;
+    let finished = false;
+    let timerId = null;
+    let scrambled = "";
+
+    const scoreEl = document.getElementById("score");
+    const timerEl = document.getElementById("timer");
+    const messageEl = document.getElementById("message");
+    const roundEl = document.getElementById("round");
+    const helperEl = document.getElementById("helper");
+    const clueEl = document.getElementById("clue");
+    const tilesEl = document.getElementById("tiles");
+    const answerTrackEl = document.getElementById("answerTrack");
+    const answerEl = document.getElementById("answer");
+    const wordListEl = document.getElementById("wordList");
+    const celebrationEl = document.getElementById("celebration");
+    const formEl = document.getElementById("puzzleForm");
+    const shuffleButton = document.getElementById("shuffleButton");
+
+    function shuffleWord(word) {
+      const letters = word.split("");
+      for (let i = letters.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [letters[i], letters[j]] = [letters[j], letters[i]];
+      }
+      const result = letters.join("");
+      return result === word ? shuffleWord(word) : result;
+    }
+
+    function drawTiles() {
+      tilesEl.innerHTML = "";
+      scrambled.split("").forEach((letter) => {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.textContent = letter;
+        tilesEl.appendChild(tile);
+      });
+    }
+
+    function drawAnswerTrack() {
+      answerTrackEl.innerHTML = "";
+      const typed = answerEl.value.trim().toUpperCase();
+      puzzles[current].word.split("").forEach((_, index) => {
+        const slot = document.createElement("div");
+        slot.className = "answer-slot";
+        slot.textContent = typed[index] || "";
+        answerTrackEl.appendChild(slot);
+      });
+    }
+
+    function drawSolvedBoxes() {
+      wordListEl.innerHTML = "";
+      puzzles.forEach((item, index) => {
+        const slot = document.createElement("div");
+        slot.className = index < current ? "slot done" : "slot";
+        slot.textContent = index < current ? item.word : "??????";
+        wordListEl.appendChild(slot);
+      });
+    }
+
+    function renderPuzzle() {
+      const puzzle = puzzles[current];
+      scrambled = shuffleWord(puzzle.word);
+      clueEl.textContent = puzzle.clue;
+      roundEl.textContent = `Puzzle ${current + 1} of ${puzzles.length}`;
+      helperEl.textContent = helpers[current % helpers.length];
+      scoreEl.textContent = score;
+      answerEl.value = "";
+      drawTiles();
+      drawAnswerTrack();
+      drawSolvedBoxes();
+      answerEl.focus();
+    }
+
+    function startTimer() {
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        if (finished) {
+          return;
+        }
+        seconds -= 1;
+        timerEl.textContent = seconds;
+        if (seconds <= 0) {
+          seconds = 75;
+          messageEl.textContent = "The dragon reset the puzzle timer.";
+          renderPuzzle();
+        }
+      }, 1000);
+    }
+
+    function completeGame() {
+      finished = true;
+      clearInterval(timerId);
+      drawSolvedBoxes();
+      celebrationEl.classList.add("show");
+      messageEl.textContent = "The court is celebrating!";
+    }
+
+    function restartGame() {
+      current = 0;
+      score = 0;
+      seconds = 75;
+      finished = false;
+      timerEl.textContent = seconds;
+      celebrationEl.classList.remove("show");
+      messageEl.textContent = "Choose the correct royal word.";
+      renderPuzzle();
+      startTimer();
+    }
+
+    answerEl.addEventListener("input", drawAnswerTrack);
+
+    shuffleButton.addEventListener("click", () => {
+      scrambled = shuffleWord(puzzles[current].word);
+      drawTiles();
+      messageEl.textContent = "The tiles shuffled. Very royal.";
+      answerEl.focus();
+    });
+
+    formEl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (finished) {
+        return;
+      }
+
+      const answer = answerEl.value.trim().toUpperCase();
+      const target = puzzles[current].word;
+
+      if (answer === target) {
+        score += 10;
+        seconds = Math.min(75, seconds + 5);
+        current += 1;
+        messageEl.textContent = "Correct! The dolls cheer!";
+
+        if (current >= puzzles.length) {
+          scoreEl.textContent = score;
+          completeGame();
+          return;
+        }
+
+        timerEl.textContent = seconds;
+        renderPuzzle();
+      } else {
+        seconds = Math.max(5, seconds - 3);
+        messageEl.textContent = "Almost. Try the royal letters again.";
+        timerEl.textContent = seconds;
+        answerEl.select();
+      }
+    });
+
+    renderPuzzle();
+    startTimer();
+  </script>
+</body>
+</html>

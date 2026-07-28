@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ping! — Internet &amp; Web Technologies Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg: #0d1321;
+    --panel: #131b2e;
+    --panel-border: #223051;
+    --cyan: #00d9ff;
+    --amber: #ffb703;
+    --green: #06d6a0;
+    --coral: #ef476f;
+    --text: #e8eef5;
+    --text-dim: #8a97b3;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  body{
+    background:
+      radial-gradient(circle at 20% 10%, #16213e 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, #12233a 0%, transparent 40%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .browser{
+    width: 100%;
+    max-width: 640px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+  }
+
+  .chrome{
+    background: #0a0f1c;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.r{ background:#ef476f55; border:1px solid var(--coral); }
+  .dot.y{ background:#ffb70355; border:1px solid var(--amber); }
+  .dot.g{ background:#06d6a055; border:1px solid var(--green); }
+  .addr{
+    flex:1;
+    background: #131b2e;
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .addr::before{ content:"🔒"; font-size:10px; }
+  #status-chip{
+    font-family:'Space Mono',monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+
+  .packets{
+    display:flex;
+    gap: 5px;
+    padding: 14px 20px;
+    background: #0f1626;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .packet{
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    background: #1c2740;
+    border: 1px solid var(--panel-border);
+    transition: all .25s ease;
+  }
+  .packet.current{
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px #ffb70322;
+  }
+  .packet.correct{ background: var(--green); border-color: var(--green); }
+  .packet.wrong{ background: var(--coral); border-color: var(--coral); }
+
+  .content{ padding: 28px 26px 26px; }
+
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  h1#question{
+    font-size: 21px;
+    line-height: 1.45;
+    font-weight: 700;
+    margin-bottom: 22px;
+    min-height: 60px;
+  }
+
+  .options{
+    display: grid;
+    gap: 10px;
+  }
+
+  .opt{
+    text-align: left;
+    background: #16213e;
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 13px 16px;
+    border-radius: 9px;
+    font-size: 14.5px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    transition: transform .12s ease, border-color .15s ease, background .15s ease;
+  }
+  .opt:hover:not(:disabled){ border-color: var(--cyan); transform: translateX(3px); }
+  .opt:disabled{ cursor: default; }
+
+  .opt .tag{
+    font-family:'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    border: 1px solid var(--panel-border);
+    border-radius: 5px;
+    padding: 2px 6px;
+  }
+
+  .opt.correct{ background: #06d6a01a; border-color: var(--green); }
+  .opt.correct .tag{ color: var(--green); border-color: var(--green); }
+  .opt.wrong{ background: #ef476f1a; border-color: var(--coral); }
+  .opt.wrong .tag{ color: var(--coral); border-color: var(--coral); }
+
+  .feedback{
+    margin-top: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    min-height: 20px;
+  }
+  .feedback.show{ color: var(--text); }
+
+  .footer-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-top: 22px;
+  }
+
+  .score{
+    font-family:'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .score b{ color: var(--amber); }
+
+  button.next{
+    background: var(--cyan);
+    color: #04121c;
+    border: none;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .1s ease;
+  }
+  button.next.show{ opacity: 1; pointer-events: all; }
+  button.next:hover{ transform: translateY(-1px); }
+
+  /* results screen */
+  .results{ display:none; text-align:center; padding: 10px 4px 4px; }
+  .results.show{ display:block; }
+  .results .big{
+    font-family:'Space Mono', monospace;
+    font-size: 56px;
+    color: var(--cyan);
+    margin: 6px 0 4px;
+  }
+  .results .verdict{
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .results p.sub{ color: var(--text-dim); font-size: 13px; margin-bottom: 24px; }
+  .results button.next{ opacity:1; pointer-events:all; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  @media (max-width: 480px){
+    .content{ padding: 22px 18px; }
+    h1#question{ font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="browser">
+  <div class="chrome">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <div class="addr">localhost/internet-and-web-tech-quiz</div>
+    <div id="status-chip">CONNECTING…</div>
+  </div>
+
+  <div class="packets" id="packets"></div>
+
+  <div class="content">
+    <div id="quiz-screen">
+      <div class="eyebrow" id="q-count">PACKET 1 / 20</div>
+      <h1 id="question">Loading question…</h1>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="footer-row">
+        <div class="score">SCORE: <b id="score">0</b> / 20</div>
+        <button class="next" id="next-btn">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="eyebrow">TRANSMISSION COMPLETE</div>
+      <div class="big" id="final-score">0/20</div>
+      <div class="verdict" id="verdict"></div>
+      <p class="sub" id="verdict-sub"></p>
+      <button class="next show" id="restart-btn">RECONNECT ↻</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { q: "What does HTTP stand for?", opts: ["HyperText Transfer Protocol","High Transfer Text Protocol","HyperText Transmission Process","Host Transfer Text Program"], a: 0, fact: "HTTP has moved through versions 0.9 → 1.1 → 2 → 3, each improving speed and connection handling." },
+  { q: "Which port does HTTPS use by default?", opts: ["80","21","443","8080"], a: 2, fact: "Port 443 is reserved for HTTPS, while plain HTTP uses port 80." },
+  { q: "What does DNS primarily do?", opts: ["Encrypts web traffic","Translates domain names into IP addresses","Compresses images","Manages cookies"], a: 1, fact: "DNS is often called the 'phonebook of the internet'." },
+  { q: "Which tag is used to link an external CSS file in HTML?", opts: ["<style>", "<css>", "<link>", "<script>"], a: 2, fact: "The <link> tag with rel='stylesheet' connects external CSS to an HTML document." },
+  { q: "What does CSS stand for?", opts: ["Cascading Style Sheets","Computer Style Sheets","Creative Style System","Colorful Style Syntax"], a: 0, fact: "'Cascading' refers to how style rules override each other based on specificity and order." },
+  { q: "Which HTTP method is typically used to submit form data that changes server state?", opts: ["GET","POST","LINK","SHOW"], a: 1, fact: "POST sends data in the request body, while GET appends data to the URL." },
+  { q: "What is the correct file extension for JavaScript files?", opts: [".java",".js",".jsx only",".javascript"], a: 1, fact: "JavaScript files use the .js extension, unrelated to Java despite the similar name." },
+  { q: "Which protocol is used to transfer files securely over the internet?", opts: ["FTP","SFTP","SMTP","ARP"], a: 1, fact: "SFTP (SSH File Transfer Protocol) encrypts data during file transfer, unlike plain FTP." },
+  { q: "What does the acronym URL stand for?", opts: ["Uniform Resource Locator","Universal Reference Link","United Resource Locator","Uniform Referral Location"], a: 0, fact: "A URL specifies both the location of a resource and the protocol used to access it." },
+  { q: "Which of these is a client-side scripting language?", opts: ["PHP","JavaScript","MySQL","Python (server-side)"], a: 1, fact: "JavaScript runs directly in the browser, enabling interactivity without server round-trips." },
+  { q: "What is the purpose of the <head> section in an HTML document?", opts: ["Displays the main visible content","Holds metadata, title, and links to resources","Creates the page footer","Defines table headers"], a: 1, fact: "The <head> never renders directly on the page — it configures the document instead." },
+  { q: "Which status code indicates 'Page Not Found'?", opts: ["200","301","404","500"], a: 2, fact: "404 means the server couldn't find the requested resource — a web classic." },
+  { q: "What does IP stand for in networking?", opts: ["Internet Protocol","Internal Process","Interface Program","Instant Ping"], a: 0, fact: "IP addresses uniquely identify devices on a network so data can find its way home." },
+  { q: "Which CSS property controls the space between an element's border and its content?", opts: ["margin","padding","spacing","gap"], a: 1, fact: "Padding is inside the border; margin is outside it — a classic mix-up." },
+  { q: "What does 'www' stand for?", opts: ["World Wide Web","Web Wide World","World Web Wide","Wide World Web"], a: 0, fact: "The WWW was invented by Tim Berners-Lee in 1989 at CERN." },
+  { q: "Which language is primarily used to style web pages?", opts: ["HTML","CSS","XML","JSON"], a: 1, fact: "HTML structures content, CSS styles it, and JavaScript makes it interactive." },
+  { q: "What is a cookie in web technology?", opts: ["A cached image file","A small piece of data stored by the browser","A type of server error","A CSS animation"], a: 1, fact: "Cookies let servers remember things like login sessions between page requests." },
+  { q: "Which of the following is NOT a valid HTML5 semantic tag?", opts: ["<article>","<section>","<container>","<footer>"], a: 2, fact: "<container> isn't real HTML — <div> or <section> are the usual choices instead." },
+  { q: "What does API stand for?", opts: ["Application Programming Interface","Automated Program Instruction","Applied Protocol Interaction","Application Process Integration"], a: 0, fact: "APIs let different software systems talk to each other using defined rules." },
+  { q: "Which HTML attribute specifies an alternate text for an image if it fails to load?", opts: ["title","src","alt","desc"], a: 2, fact: "The alt attribute also helps screen readers describe images to visually impaired users." }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const results = new Array(questions.length).fill(null); // 'correct' | 'wrong'
+
+const packetsEl = document.getElementById('packets');
+const qCountEl = document.getElementById('q-count');
+const questionEl = document.getElementById('question');
+const optionsEl = document.getElementById('options');
+const feedbackEl = document.getElementById('feedback');
+const scoreEl = document.getElementById('score');
+const nextBtn = document.getElementById('next-btn');
+const statusChip = document.getElementById('status-chip');
+const quizScreen = document.getElementById('quiz-screen');
+const resultsScreen = document.getElementById('results');
+
+function buildPackets(){
+  packetsEl.innerHTML = '';
+  questions.forEach((_, i) => {
+    const p = document.createElement('div');
+    p.className = 'packet';
+    p.id = 'packet-' + i;
+    packetsEl.appendChild(p);
+  });
+}
+
+function renderQuestion(){
+  answered = false;
+  const item = questions[current];
+  qCountEl.textContent = `PACKET ${current + 1} / ${questions.length}`;
+  questionEl.textContent = item.q;
+  feedbackEl.textContent = '';
+  feedbackEl.classList.remove('show');
+  nextBtn.classList.remove('show');
+  statusChip.textContent = 'CONNECTING…';
+  statusChip.style.color = 'var(--cyan)';
+  statusChip.style.borderColor = 'var(--cyan)';
+
+  document.querySelectorAll('.packet').forEach((p, i) => {
+    p.classList.remove('current');
+    if (i === current) p.classList.add('current');
+  });
+
+  optionsEl.innerHTML = '';
+  const labels = ['A','B','C','D'];
+  item.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="tag">${labels[i]}</span><span>${opt}</span>`;
+    btn.addEventListener('click', () => selectAnswer(i, btn));
+    optionsEl.appendChild(btn);
+  });
+}
+
+function selectAnswer(i, btn){
+  if (answered) return;
+  answered = true;
+  const item = questions[current];
+  const correct = i === item.a;
+  const allBtns = optionsEl.querySelectorAll('.opt');
+  allBtns.forEach(b => b.disabled = true);
+
+  allBtns[item.a].classList.add('correct');
+  if (!correct) btn.classList.add('wrong');
+
+  const packetEl = document.getElementById('packet-' + current);
+  packetEl.classList.remove('current');
+
+  if (correct){
+    score++;
+    results[current] = 'correct';
+    packetEl.classList.add('correct');
+    statusChip.textContent = '200 OK';
+    statusChip.style.color = 'var(--green)';
+    statusChip.style.borderColor = 'var(--green)';
+  } else {
+    results[current] = 'wrong';
+    packetEl.classList.add('wrong');
+    statusChip.textContent = '404 NOT FOUND';
+    statusChip.style.color = 'var(--coral)';
+    statusChip.style.borderColor = 'var(--coral)';
+  }
+
+  scoreEl.textContent = score;
+  feedbackEl.textContent = (correct ? '✔ Correct — ' : '✘ Not quite — ') + item.fact;
+  feedbackEl.classList.add('show');
+  nextBtn.classList.add('show');
+  nextBtn.textContent = current === questions.length - 1 ? 'SEE RESULTS →' : 'NEXT →';
+}
+
+function nextQuestion(){
+  if (current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults(){
+  quizScreen.style.display = 'none';
+  resultsScreen.classList.add('show');
+  document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+
+  let verdict, sub;
+  const pct = score / questions.length;
+  if (pct === 1){ verdict = "Full bandwidth. Zero packet loss. 🏆"; sub = "You didn't just pass the quiz, you basically wrote the RFC."; }
+  else if (pct >= 0.8){ verdict = "Strong signal. Nicely routed. 📡"; sub = "You clearly know your way around the stack."; }
+  else if (pct >= 0.5){ verdict = "Connection stable, a few dropped packets. 🔧"; sub = "Solid grasp — a bit more revision and you're golden."; }
+  else { verdict = "Connection timed out. ⚠️"; sub = "Time to hit refresh on the fundamentals — you've got this."; }
+
+  document.getElementById('verdict').textContent = verdict;
+  document.getElementById('verdict-sub').textContent = sub;
+  statusChip.textContent = 'DONE';
+  statusChip.style.color = 'var(--amber)';
+  statusChip.style.borderColor = 'var(--amber)';
+}
+
+function restart(){
+  current = 0;
+  score = 0;
+  results.fill(null);
+  scoreEl.textContent = 0;
+  quizScreen.style.display = 'block';
+  resultsScreen.classList.remove('show');
+  buildPackets();
+  renderQuestion();
+}
+
+nextBtn.addEventListener('click', nextQuestion);
+document.getElementById('restart-btn').addEventListener('click', restart);
+
+buildPackets();
+renderQuestion();
+</script>
+
+</body>
+</html>

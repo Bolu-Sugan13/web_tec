@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>calc — basic &amp; scientific</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg-1: #1c1a24;
+    --bg-2: #14131b;
+    --panel: #232130;
+    --panel-raised: #2a2836;
+    --key: #2d2b3a;
+    --key-hover: #38364a;
+    --amber: #ffb454;
+    --teal: #5eead4;
+    --lilac: #b6a6ff;
+    --text: #f2f0f8;
+    --text-dim: #8b87a0;
+    --danger: #ff6b6b;
+    --shadow-dark: #0d0c12;
+    --shadow-light: #302e40;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  body{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 28px 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    background:
+      radial-gradient(circle at 15% 0%, #2a2740 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, #1a2430 0%, transparent 45%),
+      var(--bg-2);
+    color: var(--text);
+  }
+
+  .calc{
+    width: 100%;
+    max-width: 380px;
+    background: var(--panel);
+    border-radius: 26px;
+    padding: 22px;
+    box-shadow:
+      0 40px 90px -30px rgba(0,0,0,0.7),
+      inset 0 1px 0 rgba(255,255,255,0.03);
+    border: 1px solid #322f42;
+  }
+
+  /* header / mode switch */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 0 2px;
+  }
+  .brand{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+  .brand .led{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+  }
+
+  .mode-toggle{
+    display:flex;
+    background: var(--bg-2);
+    border-radius: 20px;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid #302e40;
+  }
+  .mode-toggle button{
+    border:none;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .mode-toggle button.active{
+    background: var(--lilac);
+    color: #1c1a24;
+    font-weight: 600;
+  }
+
+  /* display */
+  .display{
+    background: var(--bg-2);
+    border-radius: 18px;
+    padding: 22px 18px 18px;
+    margin-bottom: 16px;
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .display::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--lilac), var(--amber));
+    opacity: .7;
+  }
+  #history{
+    min-height: 18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--text-dim);
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 6px;
+  }
+  #expr{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--teal);
+    min-height: 16px;
+    margin-bottom: 4px;
+    letter-spacing: .3px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  #result{
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.15;
+    word-break: break-all;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: color .15s ease;
+  }
+  #result.error{ color: var(--danger); font-size: 24px; }
+
+  /* keypad */
+  .pad{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .sci-pad{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height .3s ease, opacity .25s ease, margin .3s ease;
+  }
+  .sci-pad.open{
+    max-height: 260px;
+    opacity: 1;
+  }
+
+  button.key{
+    border: none;
+    border-radius: 14px;
+    padding: 16px 0;
+    font-size: 17px;
+    font-weight: 500;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    color: var(--text);
+    background: var(--key);
+    box-shadow:
+      3px 3px 6px var(--shadow-dark),
+      -2px -2px 5px var(--shadow-light);
+    transition: transform .08s ease, background .15s ease, box-shadow .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button.key:hover{ background: var(--key-hover); }
+  button.key:active{
+    transform: scale(0.94);
+    box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+  }
+
+  .sci-pad button.key{
+    font-size: 12.5px;
+    padding: 11px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--lilac);
+  }
+
+  button.key.op{ color: var(--amber); font-size: 19px; }
+  button.key.equals{
+    background: linear-gradient(135deg, var(--teal), #3fc9b0);
+    color: #10261f;
+    font-weight: 700;
+    box-shadow: 3px 3px 10px rgba(94,234,212,0.25);
+  }
+  button.key.equals:hover{ filter: brightness(1.05); }
+  button.key.clear{ color: var(--danger); }
+  button.key.wide{ grid-column: span 2; }
+
+  #keypad-hint{
+    text-align:center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 14px;
+    letter-spacing: .5px;
+  }
+
+  @media (max-width: 400px){
+    #result{ font-size: 32px; }
+    button.key{ padding: 13px 0; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="calc">
+  <div class="topbar">
+    <div class="brand"><span class="led"></span>CALC.EXE</div>
+    <div class="mode-toggle">
+      <button id="btn-basic" class="active">BASIC</button>
+      <button id="btn-sci">SCIENTIFIC</button>
+    </div>
+  </div>
+
+  <div class="display">
+    <div id="history"></div>
+    <div id="expr">0</div>
+    <div id="result">0</div>
+  </div>
+
+  <div class="sci-pad" id="sciPad">
+    <button class="key" data-func="sin(">sin</button>
+    <button class="key" data-func="cos(">cos</button>
+    <button class="key" data-func="tan(">tan</button>
+    <button class="key" data-func="log(">log</button>
+    <button class="key" data-func="ln(">ln</button>
+
+    <button class="key" data-func="asin(">asin</button>
+    <button class="key" data-func="acos(">acos</button>
+    <button class="key" data-func="atan(">atan</button>
+    <button class="key" data-insert="^">xʸ</button>
+    <button class="key" data-insert="!">x!</button>
+
+    <button class="key" data-func="sqrt(">√</button>
+    <button class="key" data-insert="(">(</button>
+    <button class="key" data-insert=")">)</button>
+    <button class="key" data-insert="pi">π</button>
+    <button class="key" data-insert="e">e</button>
+  </div>
+
+  <div class="pad">
+    <button class="key clear" data-action="clear">AC</button>
+    <button class="key clear" data-action="backspace">⌫</button>
+    <button class="key op" data-insert="%">%</button>
+    <button class="key op" data-insert="/">÷</button>
+
+    <button class="key" data-insert="7">7</button>
+    <button class="key" data-insert="8">8</button>
+    <button class="key" data-insert="9">9</button>
+    <button class="key op" data-insert="*">×</button>
+
+    <button class="key" data-insert="4">4</button>
+    <button class="key" data-insert="5">5</button>
+    <button class="key" data-insert="6">6</button>
+    <button class="key op" data-insert="-">−</button>
+
+    <button class="key" data-insert="1">1</button>
+    <button class="key" data-insert="2">2</button>
+    <button class="key" data-insert="3">3</button>
+    <button class="key op" data-insert="+">+</button>
+
+    <button class="key wide" data-insert="0">0</button>
+    <button class="key" data-insert=".">.</button>
+    <button class="key equals" data-action="equals">=</button>
+  </div>
+
+  <div id="keypad-hint">KEYBOARD SUPPORTED · ENTER = EQUALS · ESC = CLEAR</div>
+</div>
+
+<script>
+const exprEl = document.getElementById('expr');
+const resultEl = document.getElementById('result');
+const historyEl = document.getElementById('history');
+const sciPad = document.getElementById('sciPad');
+const btnBasic = document.getElementById('btn-basic');
+const btnSci = document.getElementById('btn-sci');
+
+let expr = '';
+let justEvaluated = false;
+
+btnSci.addEventListener('click', () => {
+  sciPad.classList.add('open');
+  btnSci.classList.add('active');
+  btnBasic.classList.remove('active');
+});
+btnBasic.addEventListener('click', () => {
+  sciPad.classList.remove('open');
+  btnBasic.classList.add('active');
+  btnSci.classList.remove('active');
+});
+
+function updateDisplay(){
+  exprEl.textContent = expr || '0';
+  resultEl.classList.remove('error');
+}
+
+function insert(val){
+  if (justEvaluated && /^[0-9.]/.test(val)){
+    expr = '';
+  }
+  justEvaluated = false;
+  expr += val;
+  updateDisplay();
+  liveEvaluate();
+}
+
+function backspace(){
+  expr = expr.slice(0, -1);
+  updateDisplay();
+  liveEvaluate();
+}
+
+function clearAll(){
+  expr = '';
+  historyEl.textContent = '';
+  resultEl.textContent = '0';
+  resultEl.classList.remove('error');
+  updateDisplay();
+}
+
+/* ---- Safe expression evaluator (recursive-descent) ---- */
+function evaluate(source){
+  let s = source
+    .replace(/\s+/g, '')
+    .replace(/π/g, 'pi')
+    .replace(/×/g, '*')
+    .replace(/÷/g, '/')
+    .replace(/−/g, '-');
+
+  let i = 0;
+
+  function peek(){ return s[i]; }
+  function eatMatch(str){
+    if (s.startsWith(str, i)){ i += str.length; return true; }
+    return false;
+  }
+
+  function parseExpr(){
+    let v = parseTerm();
+    while (true){
+      if (eatMatch('+')) v += parseTerm();
+      else if (peek() === '-' ){ i++; v -= parseTerm(); }
+      else break;
+    }
+    return v;
+  }
+
+  function parseTerm(){
+    let v = parseFactorial();
+    while (true){
+      if (eatMatch('*')) v *= parseFactorial();
+      else if (eatMatch('/')) v /= parseFactorial();
+      else if (eatMatch('%')) v = v % parseFactorial();
+      else break;
+    }
+    return v;
+  }
+
+  function parseFactorial(){
+    let v = parsePower();
+    while (eatMatch('!')){
+      v = factorial(v);
+    }
+    return v;
+  }
+
+  function parsePower(){
+    let v = parseUnary();
+    if (eatMatch('^')){
+      const exp = parsePower();
+      v = Math.pow(v, exp);
+    }
+    return v;
+  }
+
+  function parseUnary(){
+    if (eatMatch('-')) return -parseUnary();
+    if (eatMatch('+')) return parseUnary();
+    return parseAtom();
+  }
+
+  function parseAtom(){
+    if (eatMatch('(')){
+      const v = parseExpr();
+      if (!eatMatch(')')) throw new Error('Missing )');
+      return v;
+    }
+    const funcs = [
+      ['asin', Math.asin], ['acos', Math.acos], ['atan', Math.atan],
+      ['sin', Math.sin], ['cos', Math.cos], ['tan', Math.tan],
+      ['sqrt', Math.sqrt], ['log', Math.log10], ['ln', Math.log]
+    ];
+    for (const [name, fn] of funcs){
+      if (s.startsWith(name + '(', i)){
+        i += name.length + 1;
+        const arg = parseExpr();
+        if (!eatMatch(')')) throw new Error('Missing )');
+        let result = fn(arg);
+        if (name === 'sin' || name === 'cos' || name === 'tan'){
+          result = fn(arg * Math.PI / 180); // degrees
+        }
+        if (name === 'asin' || name === 'acos' || name === 'atan'){
+          result = fn(arg) * 180 / Math.PI; // return degrees
+        }
+        return result;
+      }
+    }
+    if (eatMatch('pi')) return Math.PI;
+    if (eatMatch('e')) return Math.E;
+
+    const start = i;
+    while (i < s.length && /[0-9.]/.test(s[i])) i++;
+    if (i === start) throw new Error('Unexpected token: ' + s[i]);
+    return parseFloat(s.slice(start, i));
+  }
+
+  function factorial(n){
+    if (n < 0 || !Number.isInteger(n)) throw new Error('Bad factorial');
+    let r = 1;
+    for (let k = 2; k <= n; k++) r *= k;
+    return r;
+  }
+
+  const val = parseExpr();
+  if (i !== s.length) throw new Error('Unexpected trailing input');
+  if (Number.isNaN(val) || !Number.isFinite(val)) throw new Error('Math error');
+  return val;
+}
+
+function formatResult(n){
+  if (Object.is(n, -0)) n = 0;
+  const rounded = Math.round(n * 1e10) / 1e10;
+  return rounded.toString();
+}
+
+function liveEvaluate(){
+  if (!expr){ resultEl.textContent = '0'; resultEl.classList.remove('error'); return; }
+  try {
+    const val = evaluate(expr);
+    resultEl.textContent = formatResult(val);
+    resultEl.classList.remove('error');
+  } catch(e){
+    // don't show error while typing, just leave last valid result silently
+  }
+}
+
+function doEquals(){
+  if (!expr) return;
+  try {
+    const val = evaluate(expr);
+    const formatted = formatResult(val);
+    historyEl.textContent = expr + ' =';
+    resultEl.textContent = formatted;
+    resultEl.classList.remove('error');
+    expr = formatted;
+    justEvaluated = true;
+    updateDisplay();
+  } catch(e){
+    resultEl.textContent = 'Syntax error';
+    resultEl.classList.add('error');
+  }
+}
+
+document.querySelectorAll('[data-insert]').forEach(btn => {
+  btn.addEventListener('click', () => insert(btn.dataset.insert));
+});
+document.querySelectorAll('[data-func]').forEach(btn => {
+  btn.addEventListener('click', () => insert(btn.dataset.func));
+});
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    if (action === 'clear') clearAll();
+    else if (action === 'backspace') backspace();
+    else if (action === 'equals') doEquals();
+  });
+});
+
+window.addEventListener('keydown', (ev) => {
+  const k = ev.key;
+  if (/[0-9.+\-*/%^()]/.test(k)){ insert(k); ev.preventDefault(); }
+  else if (k === 'Enter' || k === '='){ doEquals(); ev.preventDefault(); }
+  else if (k === 'Backspace'){ backspace(); ev.preventDefault(); }
+  else if (k === 'Escape'){ clearAll(); ev.preventDefault(); }
+});
+
+updateDisplay();
+</script>
+
+</body>
+</html>
