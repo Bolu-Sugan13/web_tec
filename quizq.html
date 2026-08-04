@@ -1,3 +1,6 @@
+
+
+Quiz · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,6 +131,8 @@
 </div>
  
 <script>
+const ROUND_SIZE = 20;
+ 
 const questions = [
   { q: "What does HTTP stand for?", opts: ["HyperText Transfer Protocol","High Transfer Text Protocol","HyperText Transmission Process","Host Transfer Text Program"], a: 0, fact: "HTTP has moved through versions 0.9 → 1.1 → 2 → 3, each improving speed and connection handling." },
   { q: "Which port does HTTPS use by default?", opts: ["80","21","443","8080"], a: 2, fact: "Port 443 is reserved for HTTPS, while plain HTTP uses port 80." },
@@ -148,7 +153,87 @@ const questions = [
   { q: "What is a cookie in web technology?", opts: ["A cached image file","A small piece of data stored by the browser","A type of server error","A CSS animation"], a: 1, fact: "Cookies let servers remember things like login sessions between page requests." },
   { q: "Which of the following is NOT a valid HTML5 semantic tag?", opts: ["<article>","<section>","<container>","<footer>"], a: 2, fact: "<container> isn't real HTML — <div> or <section> are the usual choices instead." },
   { q: "What does API stand for?", opts: ["Application Programming Interface","Automated Program Instruction","Applied Protocol Interaction","Application Process Integration"], a: 0, fact: "APIs let different software systems talk to each other using defined rules." },
-  { q: "Which HTML attribute specifies an alternate text for an image if it fails to load?", opts: ["title","src","alt","desc"], a: 2, fact: "The alt attribute also helps screen readers describe images to visually impaired users." }
+  { q: "Which HTML attribute specifies an alternate text for an image if it fails to load?", opts: ["title","src","alt","desc"], a: 2, fact: "The alt attribute also helps screen readers describe images to visually impaired users." },
+  { q: "What does REST stand for in web APIs?", opts: ["Representational State Transfer","Remote State Transfer","Relational State Transfer","Recursive State Transfer"], a: 0, fact: "REST is an architectural style for designing networked applications around resources and standard HTTP methods." },
+  { q: "Which range of HTTP status codes represents client errors?", opts: ["1xx","2xx","4xx","5xx"], a: 2, fact: "4xx codes mean the request had a problem, like 404 Not Found or 403 Forbidden." },
+  { q: "Which data format is most commonly used in modern REST APIs?", opts: ["XML","JSON","CSV","YAML"], a: 1, fact: "JSON is lightweight and maps naturally onto JavaScript objects, making it a web favorite." },
+  { q: "What does CRUD stand for?", opts: ["Create, Read, Update, Delete","Copy, Run, Undo, Deploy","Create, Run, Update, Debug","Connect, Read, Upload, Download"], a: 0, fact: "CRUD describes the four basic operations most applications perform on data." },
+  { q: "Which HTTP method is typically used to replace an existing resource entirely?", opts: ["GET","PUT","OPTIONS","HEAD"], a: 1, fact: "PUT usually replaces the full resource, while PATCH is used for partial updates." },
+  { q: "Which HTTP method is used to remove a resource?", opts: ["GET","POST","DELETE","TRACE"], a: 2, fact: "DELETE requests ask the server to remove the specified resource." },
+  { q: "What is the main purpose of a CDN (Content Delivery Network)?", opts: ["Encrypt user passwords","Serve content from servers closer to the user for speed", "Write server-side code","Compile JavaScript"], a: 1, fact: "CDNs cache copies of content across many locations to reduce load times." },
+  { q: "What does TLS stand for?", opts: ["Transport Layer Security","Text Line Syntax","Total Link Speed","Transfer List Service"], a: 0, fact: "TLS is the modern successor to SSL and encrypts data sent between browser and server." },
+  { q: "Which protocol pair is responsible for encrypting data during transmission on the web?", opts: ["HTML/CSS","SSL/TLS","FTP/SMTP","DNS/DHCP"], a: 1, fact: "SSL was the original protocol; TLS replaced it and is what HTTPS relies on today." },
+  { q: "What is CORS used for?", opts: ["Compressing CSS files","Controlling which origins can access a web resource","Formatting dates","Managing browser cookies"], a: 1, fact: "CORS (Cross-Origin Resource Sharing) lets servers specify who is allowed to make cross-domain requests." },
+  { q: "What does XSS stand for?", opts: ["Cross-Site Scripting","Extended Style Sheets","Cross-Server Sync","External Script Source"], a: 0, fact: "XSS attacks inject malicious scripts into pages viewed by other users." },
+  { q: "What does CSRF stand for?", opts: ["Cross-Site Request Forgery","Client-Side Response Format","Cross-Server Redirect Function","Cached Site Resource File"], a: 0, fact: "CSRF tricks a logged-in user's browser into making unwanted requests to a site." },
+  { q: "What is the purpose of the same-origin policy?", opts: ["Speed up page loading","Restrict how scripts from one origin interact with another origin's resources","Compress images automatically","Manage DNS records"], a: 1, fact: "This browser security rule helps prevent malicious sites from reading data from other sites." },
+  { q: "Which HTTP header specifies the type of content being sent in a response?", opts: ["Content-Type","Accept-Language","Cache-Control","User-Agent"], a: 0, fact: "Content-Type tells the browser how to interpret the response body, like text/html or application/json." },
+  { q: "What does JSON stand for?", opts: ["JavaScript Object Notation","Java Standard Output Node","Joined Syntax Object Network","JavaScript Ordered Number"], a: 0, fact: "JSON is derived from JavaScript object syntax but is language-independent." },
+  { q: "Which of the following is NOT a valid JSON data type?", opts: ["string","number","function","boolean"], a: 2, fact: "JSON supports strings, numbers, booleans, arrays, objects, and null — but not functions." },
+  { q: "What is the DOM?", opts: ["A database query language","A programming interface representing a page's structure","A CSS preprocessor","A network protocol"], a: 1, fact: "The DOM lets JavaScript read and modify the structure, style, and content of a page." },
+  { q: "Which JavaScript method selects an element by its ID?", opts: ["document.querySelectorId()","document.getElementById()","document.selectId()","document.findById()"], a: 1, fact: "getElementById() is one of the oldest and fastest ways to grab a single element." },
+  { q: "What does AJAX stand for?", opts: ["Asynchronous JavaScript and XML","Applied Java and XML","Automatic JavaScript API Xchange","Advanced JSON and XML"], a: 0, fact: "AJAX lets pages fetch and update data without a full page reload." },
+  { q: "Which browser feature lets JavaScript communicate with a server without reloading the page?", opts: ["Cookies","AJAX / Fetch API","CSS Grid","Local Storage"], a: 1, fact: "AJAX and the newer Fetch API both enable asynchronous background requests." },
+  { q: "What is the purpose of the viewport meta tag in HTML?", opts: ["Loads external fonts","Controls how a page is scaled and displayed on mobile devices","Defines page title","Sets the page's character encoding"], a: 1, fact: "Without it, mobile browsers often render pages as if on a desktop and then zoom out." },
+  { q: "Which CSS layout module is designed mainly for one-dimensional layouts (rows or columns)?", opts: ["Flexbox","Grid","Float","Table"], a: 0, fact: "Flexbox excels at aligning items along a single row or column." },
+  { q: "Which CSS layout module is designed for two-dimensional layouts (rows and columns together)?", opts: ["Flexbox","Grid","Position","Inline-block"], a: 1, fact: "CSS Grid lets you define both rows and columns explicitly for complex layouts." },
+  { q: "Which of these is NOT part of the standard CSS box model?", opts: ["Content","Padding","Border","Outline-shadow"], a: 3, fact: "The box model consists of content, padding, border, and margin — 'outline-shadow' isn't a real box model layer." },
+  { q: "Which CSS unit is relative to the root element's font size?", opts: ["em","rem","px","vh"], a: 1, fact: "rem stands for 'root em' and stays consistent regardless of nested font sizes." },
+  { q: "Which CSS unit is relative to the parent element's font size?", opts: ["em","rem","pt","%"], a: 0, fact: "em scales based on the font size of its containing element, which can compound in nested elements." },
+  { q: "What is the default CSS position value for HTML elements?", opts: ["relative","absolute","static","fixed"], a: 2, fact: "Static positioning follows the normal document flow and ignores top/left/right/bottom values." },
+  { q: "Which CSS property is used to create a grid container?", opts: ["display: grid","layout: grid","grid: true","position: grid"], a: 0, fact: "Setting display: grid on a container turns its direct children into grid items." },
+  { q: "What does SEO stand for?", opts: ["Search Engine Optimization","Site Element Order","Secure Encrypted Output","Server Endpoint Operation"], a: 0, fact: "SEO involves practices that help a site rank higher in search engine results." },
+  { q: "Which HTML tag helps define meaningful page structure for SEO and accessibility?", opts: ["<div>","<span>","<article>","<b>"], a: 2, fact: "Semantic tags like <article>, <section>, and <nav> describe the meaning of content, not just its appearance." },
+  { q: "What does WCAG stand for?", opts: ["Web Content Accessibility Guidelines","Web Coding and Graphics","World Content Access Group","Website Compliance and Audit Guide"], a: 0, fact: "WCAG provides internationally recognized standards for making web content accessible." },
+  { q: "Which HTML attribute helps screen readers describe interactive elements?", opts: ["class","aria-label","style","data-id"], a: 1, fact: "ARIA attributes add extra accessibility information not conveyed by HTML alone." },
+  { q: "What best describes a Progressive Web App (PWA)?", opts: ["A desktop-only application","A web app that can behave like a native app, including offline use","A type of database","A CSS framework"], a: 1, fact: "PWAs can be installed, run offline, and send notifications, blurring the line with native apps." },
+  { q: "Which technology enables offline functionality in Progressive Web Apps?", opts: ["Service Workers","Cookies","Media Queries","WebSockets"], a: 0, fact: "Service workers run in the background and can cache assets so the app works without a connection." },
+  { q: "What is localStorage typically used for in browsers?", opts: ["Sending emails","Storing key-value data on the client that persists across sessions","Running server-side code","Compiling CSS"], a: 1, fact: "Unlike cookies, localStorage data isn't automatically sent with every HTTP request." },
+  { q: "What is the key difference between localStorage and sessionStorage?", opts: ["sessionStorage persists forever","sessionStorage clears when the browser tab is closed","localStorage only works on HTTPS","There is no difference"], a: 1, fact: "sessionStorage is scoped to a single tab/session, while localStorage sticks around until explicitly cleared." },
+  { q: "What does JWT stand for?", opts: ["JSON Web Token","Java Web Type","JavaScript Web Transfer","Joined Web Template"], a: 0, fact: "JWTs are commonly used to securely transmit claims, like login sessions, between parties." },
+  { q: "What is OAuth primarily used for?", opts: ["Styling web pages","Delegated authorization, like letting an app access your account without your password","Compressing files","Managing DNS records"], a: 1, fact: "OAuth lets users grant limited access to their data on one site to another site or app." },
+  { q: "Which HTTP header is commonly used to send an authentication token?", opts: ["Authorization","Content-Length","Referer","Host"], a: 0, fact: "The Authorization header often carries a Bearer token or other credentials for API requests." },
+  { q: "What is a WebSocket primarily used for?", opts: ["One-time file downloads","Full-duplex, real-time communication between client and server","Styling animations","Compressing images"], a: 1, fact: "WebSockets keep a single connection open, letting data flow both ways instantly, great for chat apps." },
+  { q: "How does a WebSocket connection typically begin?", opts: ["As a plain FTP request","As an HTTP request that gets upgraded to a WebSocket connection","As a DNS lookup","As an SMTP handshake"], a: 1, fact: "The client sends an HTTP Upgrade request; if accepted, the connection switches protocols." },
+  { q: "What is the primary purpose of a firewall?", opts: ["Speed up internet connections","Monitor and control incoming and outgoing network traffic based on rules","Translate domain names","Render web pages"], a: 1, fact: "Firewalls act as a barrier between trusted and untrusted networks." },
+  { q: "What does VPN stand for?", opts: ["Virtual Private Network","Verified Public Node","Virtual Page Navigation","Variable Protocol Number"], a: 0, fact: "A VPN creates an encrypted tunnel for your traffic, often masking your real IP address." },
+  { q: "Which of these is a widely used version control system in web development?", opts: ["Git","HTML","FTP","SASS"], a: 0, fact: "Git tracks changes to code over time and enables collaboration through branches and merges." },
+  { q: "What is the purpose of npm in web development?", opts: ["A CSS framework","A package manager for JavaScript dependencies","A database engine","A browser extension"], a: 1, fact: "npm (Node Package Manager) lets developers install and manage reusable JavaScript libraries." },
+  { q: "What does Node.js primarily allow developers to do?", opts: ["Style web pages with CSS","Run JavaScript outside the browser, including on servers","Design database schemas","Compress images"], a: 1, fact: "Node.js uses the V8 engine to execute JavaScript on the server side." },
+  { q: "Which of these is a popular JavaScript library/framework for building user interfaces?", opts: ["React","MySQL","Apache","Photoshop"], a: 0, fact: "React uses a component-based approach to build interactive UIs." },
+  { q: "What is the purpose of a virtual DOM in libraries like React?", opts: ["Encrypt user data","Improve performance by minimizing direct, costly DOM updates","Store cookies","Compress CSS files"], a: 1, fact: "The virtual DOM compares changes in memory first, then updates only what's necessary in the real DOM." },
+  { q: "What does SPA stand for in web development?", opts: ["Single Page Application","Server Page Access","Simple Page API","Static Page Archive"], a: 0, fact: "SPAs load one HTML page and update content dynamically as users navigate." },
+  { q: "Which best describes a Single Page Application?", opts: ["A site with only one CSS file","An app that loads a single HTML page and updates content dynamically without full reloads","A page with no JavaScript","A static HTML-only website"], a: 1, fact: "SPAs often feel faster since only data, not the whole page, is reloaded during navigation." },
+  { q: "What is the purpose of a database index?", opts: ["Encrypt table data","Speed up data retrieval operations","Style query results","Backup the database automatically"], a: 1, fact: "Indexes work like a book's index, letting the database find rows quickly without scanning everything." },
+  { q: "Which of these is a NoSQL database?", opts: ["MySQL","PostgreSQL","MongoDB","SQLite"], a: 2, fact: "MongoDB stores data as flexible, JSON-like documents rather than rigid tables." },
+  { q: "Which of these is a relational database management system?", opts: ["MongoDB","MySQL","Redis (primarily)","Firebase Realtime DB"], a: 1, fact: "MySQL organizes data into structured tables with rows and columns linked by relationships." },
+  { q: "What does SQL stand for?", opts: ["Structured Query Language","Simple Query Logic","Server Query List","Sequential Query Loop"], a: 0, fact: "SQL is used to create, read, update, and delete data in relational databases." },
+  { q: "Which SQL command is used to retrieve data from a database?", opts: ["SELECT","GET","FETCH","PULL"], a: 0, fact: "SELECT is the most commonly used SQL statement for querying data." },
+  { q: "What is the purpose of a primary key in a database table?", opts: ["Encrypt the table","Uniquely identify each record in a table","Style the table output","Compress stored data"], a: 1, fact: "No two rows in a table can share the same primary key value." },
+  { q: "What does an IPv4 address consist of?", opts: ["Four octets forming a 32-bit address","Eight groups forming a 128-bit address","A single 16-bit number","A hexadecimal domain name"], a: 0, fact: "IPv4 addresses look like 192.168.1.1 — four numbers separated by dots." },
+  { q: "What problem does IPv6 primarily solve compared to IPv4?", opts: ["Slower page loading","The exhaustion of available IPv4 addresses","Weak CSS support","Lack of DNS support"], a: 1, fact: "IPv6's 128-bit address space provides vastly more unique addresses than IPv4's 32-bit space." },
+  { q: "What is a subnet mask used for?", opts: ["Encrypting a network","Dividing an IP address into network and host portions","Speeding up DNS lookups","Styling network diagrams"], a: 1, fact: "Subnet masks help routers determine which part of an address identifies the network versus the device." },
+  { q: "Which network device routes data between different networks?", opts: ["Switch","Router","Modem","Hub"], a: 1, fact: "Routers use IP addresses to decide the best path for forwarding data between networks." },
+  { q: "Which network device connects devices within a single local network using MAC addresses?", opts: ["Router","Switch","DNS server","Firewall"], a: 1, fact: "Switches forward data only to the specific device it's intended for, unlike older hubs." },
+  { q: "What does DHCP do?", opts: ["Encrypts network traffic","Automatically assigns IP addresses to devices on a network","Translates domain names to IPs","Filters malicious websites"], a: 1, fact: "DHCP saves administrators from manually configuring an IP address on every device." },
+  { q: "What is the purpose of a proxy server?", opts: ["Style web pages","Act as an intermediary between a client and server, often for caching or filtering","Compile JavaScript","Manage CSS grids"], a: 1, fact: "Proxies can cache content, filter requests, or hide a client's real IP address." },
+  { q: "Which browser engine does Google Chrome primarily use to render web pages?", opts: ["Gecko","Blink","WebKit (originally, now Blink)","Trident"], a: 1, fact: "Blink is a fork of WebKit, developed by Google and used in Chrome and many Chromium-based browsers." },
+  { q: "Which browser engine does Firefox use?", opts: ["Blink","Gecko","Trident","Presto"], a: 1, fact: "Gecko is Mozilla's layout engine, used exclusively by Firefox among major browsers today." },
+  { q: "Which organization maintains core web standards like HTML and CSS specifications?", opts: ["W3C","ICANN","IEEE","ISO"], a: 0, fact: "The World Wide Web Consortium (W3C) develops and publishes many core web standards." },
+  { q: "What does ECMAScript refer to?", opts: ["A CSS framework","The standardized specification that JavaScript is based on","A database query language","A type of HTML tag"], a: 1, fact: "JavaScript is an implementation of the ECMAScript standard, which evolves with yearly updates." },
+  { q: "Which modern JavaScript keyword declares a variable that cannot be reassigned?", opts: ["var","let","const","static"], a: 2, fact: "const still allows mutating objects/arrays, but the variable binding itself can't be reassigned." },
+  { q: "Which JavaScript keyword declares a block-scoped variable that can be reassigned?", opts: ["var","let","const","final"], a: 1, fact: "let was introduced in ES6 to fix scoping quirks associated with the older var keyword." },
+  { q: "What does typeof null return in JavaScript?", opts: ["'null'","'undefined'","'object'","'boolean'"], a: 2, fact: "This is a famous long-standing quirk in JavaScript, kept for backward compatibility." },
+  { q: "Which JavaScript array method creates a new array by transforming each element?", opts: ["forEach()","map()","reduce()","filter()"], a: 1, fact: "map() returns a brand-new array without modifying the original one." },
+  { q: "Which JavaScript array method returns a new array containing only elements that pass a test?", opts: ["map()","filter()","sort()","push()"], a: 1, fact: "filter() is often paired with map() to transform and narrow down data in one pipeline." },
+  { q: "What is the purpose of the fetch() API in JavaScript?", opts: ["Style HTML elements","Make network requests, such as to a web API, from the browser","Compress files","Manage local variables"], a: 1, fact: "fetch() returns a Promise, making it easy to work with asynchronous responses using async/await." },
+  { q: "Which HTTP status code indicates a successful request?", opts: ["100","200","400","500"], a: 1, fact: "200 OK is the standard response for a successful HTTP request." },
+  { q: "Which HTTP status code indicates the server encountered an unexpected error?", opts: ["200","404","500","301"], a: 2, fact: "500 Internal Server Error usually points to a bug or crash on the server side, not the client's fault." },
+  { q: "Which HTTP status code typically indicates a redirect to another URL?", opts: ["200","301","404","403"], a: 1, fact: "301 means a resource has permanently moved to a new URL." },
+  { q: "What is the purpose of a favicon?", opts: ["Encrypt a webpage","A small icon shown in the browser tab representing a website","Speed up JavaScript execution","Store cookies"], a: 1, fact: "Favicons help users visually identify a site among multiple open browser tabs." },
+  { q: "What does responsive web design aim to achieve?", opts: ["Faster server response times only","Pages that adapt well to different screen sizes and devices","Automatic SEO improvement","Encrypted page content"], a: 1, fact: "Responsive design uses flexible layouts and media queries so a site works on phones, tablets, and desktops alike." },
+  { q: "Which CSS feature lets you apply different styles based on screen width or device type?", opts: ["Pseudo-classes","Media queries","CSS variables","Flexbox only"], a: 1, fact: "Media queries are the backbone of responsive design, letting styles change at defined breakpoints." },
+  { q: "What does 'web hosting' refer to?", opts: ["Writing HTML code","A service that stores a website's files and makes them accessible on the internet", "A type of CSS animation","A JavaScript testing framework"], a: 1, fact: "Hosting providers run the servers that deliver your website's files to visitors' browsers." }
 ];
  
 let current = 0;
@@ -175,24 +260,26 @@ function shuffleArray(arr){
   return a;
 }
  
-function arraysEqual(a, b){
-  return a.length === b.length && a.every((v, i) => v === b[i]);
+function sameSet(a, b){
+  if (!a || !b || a.length !== b.length) return false;
+  const sb = new Set(b);
+  return a.every(x => sb.has(x));
 }
  
-function generateOrder(){
-  const base = questions.map((_, i) => i);
-  let newOrder;
+function drawRound(){
+  const pool = questions.map((_, i) => i);
+  let picked;
   do {
-    newOrder = shuffleArray(base);
-  } while (previousOrder && arraysEqual(newOrder, previousOrder));
-  previousOrder = newOrder;
-  return newOrder;
+    picked = shuffleArray(pool).slice(0, ROUND_SIZE);
+  } while (previousOrder && sameSet(picked, previousOrder));
+  previousOrder = picked;
+  return picked;
 }
  
 function renderQuestion(){
   answered = false;
   const item = questions[order[current]];
-  qCountEl.textContent = `Question ${current + 1} / ${questions.length}`;
+  qCountEl.textContent = `Question ${current + 1} / ${ROUND_SIZE}`;
   questionEl.textContent = item.q;
   feedbackEl.textContent = '';
   nextBtn.classList.remove('show');
@@ -223,11 +310,11 @@ function selectAnswer(i, btn){
   scoreEl.textContent = score;
   feedbackEl.textContent = (correct ? 'Correct — ' : 'Not quite — ') + item.fact;
   nextBtn.classList.add('show');
-  nextBtn.textContent = current === questions.length - 1 ? 'See results' : 'Next';
+  nextBtn.textContent = current === ROUND_SIZE - 1 ? 'See results' : 'Next';
 }
  
 function nextQuestion(){
-  if (current < questions.length - 1){
+  if (current < ROUND_SIZE - 1){
     current++;
     renderQuestion();
   } else {
@@ -238,10 +325,10 @@ function nextQuestion(){
 function showResults(){
   quizScreen.style.display = 'none';
   resultsScreen.classList.add('show');
-  document.getElementById('final-score').textContent = `${score}/${questions.length}`;
+  document.getElementById('final-score').textContent = `${score}/${ROUND_SIZE}`;
  
   let verdict, sub;
-  const pct = score / questions.length;
+  const pct = score / ROUND_SIZE;
   if (pct === 1){ verdict = "Perfect score!"; sub = "You know this material inside out."; }
   else if (pct >= 0.8){ verdict = "Great job!"; sub = "You clearly know your way around the stack."; }
   else if (pct >= 0.5){ verdict = "Not bad."; sub = "Solid grasp — a bit more revision and you're golden."; }
@@ -257,14 +344,14 @@ function restart(){
   scoreEl.textContent = 0;
   quizScreen.style.display = 'block';
   resultsScreen.classList.remove('show');
-  order = generateOrder();
+  order = drawRound();
   renderQuestion();
 }
  
 nextBtn.addEventListener('click', nextQuestion);
 document.getElementById('restart-btn').addEventListener('click', restart);
  
-order = generateOrder();
+order = drawRound();
 renderQuestion();
 </script>
  
