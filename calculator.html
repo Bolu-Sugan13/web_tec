@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<style>
+  *{ box-sizing: border-box; margin:0; padding:0; }
+ 
+  body{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+    font-family: system-ui, sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+  }
+ 
+  .calc{
+    width: 100%;
+    max-width: 340px;
+  }
+ 
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+ 
+  .mode-toggle{
+    display:flex;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .mode-toggle button{
+    border:none;
+    background: #fff;
+    color: #555;
+    font-size: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .mode-toggle button.active{
+    background: #1a1a1a;
+    color: #fff;
+  }
+ 
+  /* display */
+  .display{
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 16px 14px;
+    margin-bottom: 14px;
+    text-align: right;
+  }
+  #history{
+    min-height: 16px;
+    font-size: 12px;
+    color: #999;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 4px;
+  }
+  #expr{
+    font-size: 13px;
+    color: #666;
+    min-height: 16px;
+    margin-bottom: 4px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  #result{
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.15;
+    word-break: break-all;
+  }
+  #result.error{ color: #c62828; font-size: 20px; }
+ 
+  /* keypad */
+  .pad{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+ 
+  .sci-pad{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+    max-height: 0;
+    overflow: hidden;
+  }
+  .sci-pad.open{
+    max-height: 260px;
+  }
+ 
+  button.key{
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 14px 0;
+    font-size: 16px;
+    font-family: system-ui, sans-serif;
+    cursor: pointer;
+    color: #1a1a1a;
+    background: #fff;
+  }
+  button.key:hover{ border-color: #888; }
+  button.key:active{ background: #f0f0f0; }
+ 
+  .sci-pad button.key{
+    font-size: 12px;
+    padding: 10px 0;
+  }
+ 
+  button.key.equals{
+    background: #1a1a1a;
+    color: #fff;
+    font-weight: 600;
+  }
+  button.key.equals:hover{ background: #333; }
+  button.key.clear{ color: #c62828; }
+  button.key.wide{ grid-column: span 2; }
+ 
+  #keypad-hint{
+    text-align:center;
+    font-size: 11px;
+    color: #999;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+ 
+<div class="calc">
+  <div class="topbar">
+    <div class="mode-toggle">
+      <button id="btn-basic" class="active">Basic</button>
+      <button id="btn-sci">Scientific</button>
+    </div>
+  </div>
+ 
+  <div class="display">
+    <div id="history"></div>
+    <div id="expr">0</div>
+    <div id="result">0</div>
+  </div>
+ 
+  <div class="sci-pad" id="sciPad">
+    <button class="key" data-func="sin(">sin</button>
+    <button class="key" data-func="cos(">cos</button>
+    <button class="key" data-func="tan(">tan</button>
+    <button class="key" data-func="log(">log</button>
+    <button class="key" data-func="ln(">ln</button>
+ 
+    <button class="key" data-func="asin(">asin</button>
+    <button class="key" data-func="acos(">acos</button>
+    <button class="key" data-func="atan(">atan</button>
+    <button class="key" data-insert="^">x^y</button>
+    <button class="key" data-insert="!">x!</button>
+ 
+    <button class="key" data-func="sqrt(">√</button>
+    <button class="key" data-insert="(">(</button>
+    <button class="key" data-insert=")">)</button>
+    <button class="key" data-insert="pi">π</button>
+    <button class="key" data-insert="e">e</button>
+  </div>
+ 
+  <div class="pad">
+    <button class="key clear" data-action="clear">AC</button>
+    <button class="key clear" data-action="backspace">⌫</button>
+    <button class="key" data-insert="%">%</button>
+    <button class="key" data-insert="/">÷</button>
+ 
+    <button class="key" data-insert="7">7</button>
+    <button class="key" data-insert="8">8</button>
+    <button class="key" data-insert="9">9</button>
+    <button class="key" data-insert="*">×</button>
+ 
+    <button class="key" data-insert="4">4</button>
+    <button class="key" data-insert="5">5</button>
+    <button class="key" data-insert="6">6</button>
+    <button class="key" data-insert="-">−</button>
+ 
+    <button class="key" data-insert="1">1</button>
+    <button class="key" data-insert="2">2</button>
+    <button class="key" data-insert="3">3</button>
+    <button class="key" data-insert="+">+</button>
+ 
+    <button class="key wide" data-insert="0">0</button>
+    <button class="key" data-insert=".">.</button>
+    <button class="key equals" data-action="equals">=</button>
+  </div>
+ 
+  <div id="keypad-hint">Keyboard supported · Enter = equals · Esc = clear</div>
+</div>
+ 
+<script>
+const exprEl = document.getElementById('expr');
+const resultEl = document.getElementById('result');
+const historyEl = document.getElementById('history');
+const sciPad = document.getElementById('sciPad');
+const btnBasic = document.getElementById('btn-basic');
+const btnSci = document.getElementById('btn-sci');
+ 
+let expr = '';
+let justEvaluated = false;
+ 
+btnSci.addEventListener('click', () => {
+  sciPad.classList.add('open');
+  btnSci.classList.add('active');
+  btnBasic.classList.remove('active');
+});
+btnBasic.addEventListener('click', () => {
+  sciPad.classList.remove('open');
+  btnBasic.classList.add('active');
+  btnSci.classList.remove('active');
+});
+ 
+function updateDisplay(){
+  exprEl.textContent = expr || '0';
+  resultEl.classList.remove('error');
+}
+ 
+function insert(val){
+  if (justEvaluated && /^[0-9.]/.test(val)){
+    expr = '';
+  }
+  justEvaluated = false;
+  expr += val;
+  updateDisplay();
+  liveEvaluate();
+}
+ 
+function backspace(){
+  expr = expr.slice(0, -1);
+  updateDisplay();
+  liveEvaluate();
+}
+ 
+function clearAll(){
+  expr = '';
+  historyEl.textContent = '';
+  resultEl.textContent = '0';
+  resultEl.classList.remove('error');
+  updateDisplay();
+}
+ 
+/* ---- Safe expression evaluator (recursive-descent) ---- */
+function evaluate(source){
+  let s = source
+    .replace(/\s+/g, '')
+    .replace(/π/g, 'pi')
+    .replace(/×/g, '*')
+    .replace(/÷/g, '/')
+    .replace(/−/g, '-');
+ 
+  let i = 0;
+ 
+  function peek(){ return s[i]; }
+  function eatMatch(str){
+    if (s.startsWith(str, i)){ i += str.length; return true; }
+    return false;
+  }
+ 
+  function parseExpr(){
+    let v = parseTerm();
+    while (true){
+      if (eatMatch('+')) v += parseTerm();
+      else if (peek() === '-' ){ i++; v -= parseTerm(); }
+      else break;
+    }
+    return v;
+  }
+ 
+  function parseTerm(){
+    let v = parseFactorial();
+    while (true){
+      if (eatMatch('*')) v *= parseFactorial();
+      else if (eatMatch('/')) v /= parseFactorial();
+      else if (eatMatch('%')) v = v % parseFactorial();
+      else break;
+    }
+    return v;
+  }
+ 
+  function parseFactorial(){
+    let v = parsePower();
+    while (eatMatch('!')){
+      v = factorial(v);
+    }
+    return v;
+  }
+ 
+  function parsePower(){
+    let v = parseUnary();
+    if (eatMatch('^')){
+      const exp = parsePower();
+      v = Math.pow(v, exp);
+    }
+    return v;
+  }
+ 
+  function parseUnary(){
+    if (eatMatch('-')) return -parseUnary();
+    if (eatMatch('+')) return parseUnary();
+    return parseAtom();
+  }
+ 
+  function parseAtom(){
+    if (eatMatch('(')){
+      const v = parseExpr();
+      if (!eatMatch(')')) throw new Error('Missing )');
+      return v;
+    }
+    const funcs = [
+      ['asin', Math.asin], ['acos', Math.acos], ['atan', Math.atan],
+      ['sin', Math.sin], ['cos', Math.cos], ['tan', Math.tan],
+      ['sqrt', Math.sqrt], ['log', Math.log10], ['ln', Math.log]
+    ];
+    for (const [name, fn] of funcs){
+      if (s.startsWith(name + '(', i)){
+        i += name.length + 1;
+        const arg = parseExpr();
+        if (!eatMatch(')')) throw new Error('Missing )');
+        let result = fn(arg);
+        if (name === 'sin' || name === 'cos' || name === 'tan'){
+          result = fn(arg * Math.PI / 180); // degrees
+        }
+        if (name === 'asin' || name === 'acos' || name === 'atan'){
+          result = fn(arg) * 180 / Math.PI; // return degrees
+        }
+        return result;
+      }
+    }
+    if (eatMatch('pi')) return Math.PI;
+    if (eatMatch('e')) return Math.E;
+ 
+    const start = i;
+    while (i < s.length && /[0-9.]/.test(s[i])) i++;
+    if (i === start) throw new Error('Unexpected token: ' + s[i]);
+    return parseFloat(s.slice(start, i));
+  }
+ 
+  function factorial(n){
+    if (n < 0 || !Number.isInteger(n)) throw new Error('Bad factorial');
+    let r = 1;
+    for (let k = 2; k <= n; k++) r *= k;
+    return r;
+  }
+ 
+  const val = parseExpr();
+  if (i !== s.length) throw new Error('Unexpected trailing input');
+  if (Number.isNaN(val) || !Number.isFinite(val)) throw new Error('Math error');
+  return val;
+}
+ 
+function formatResult(n){
+  if (Object.is(n, -0)) n = 0;
+  const rounded = Math.round(n * 1e10) / 1e10;
+  return rounded.toString();
+}
+ 
+function liveEvaluate(){
+  if (!expr){ resultEl.textContent = '0'; resultEl.classList.remove('error'); return; }
+  try {
+    const val = evaluate(expr);
+    resultEl.textContent = formatResult(val);
+    resultEl.classList.remove('error');
+  } catch(e){
+    // don't show error while typing, just leave last valid result silently
+  }
+}
+ 
+function doEquals(){
+  if (!expr) return;
+  try {
+    const val = evaluate(expr);
+    const formatted = formatResult(val);
+    historyEl.textContent = expr + ' =';
+    resultEl.textContent = formatted;
+    resultEl.classList.remove('error');
+    expr = formatted;
+    justEvaluated = true;
+    updateDisplay();
+  } catch(e){
+    resultEl.textContent = 'Syntax error';
+    resultEl.classList.add('error');
+  }
+}
+ 
+document.querySelectorAll('[data-insert]').forEach(btn => {
+  btn.addEventListener('click', () => insert(btn.dataset.insert));
+});
+document.querySelectorAll('[data-func]').forEach(btn => {
+  btn.addEventListener('click', () => insert(btn.dataset.func));
+});
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    if (action === 'clear') clearAll();
+    else if (action === 'backspace') backspace();
+    else if (action === 'equals') doEquals();
+  });
+});
+ 
+window.addEventListener('keydown', (ev) => {
+  const k = ev.key;
+  if (/[0-9.+\-*/%^()]/.test(k)){ insert(k); ev.preventDefault(); }
+  else if (k === 'Enter' || k === '='){ doEquals(); ev.preventDefault(); }
+  else if (k === 'Backspace'){ backspace(); ev.preventDefault(); }
+  else if (k === 'Escape'){ clearAll(); ev.preventDefault(); }
+});
+ 
+updateDisplay();
+</script>
+ 
+</body>
+</html>
+ 
