@@ -6,256 +6,127 @@ Quiz · HTML
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ping! — Internet &amp; Web Technologies Quiz</title>
+<title>Internet & Web Technologies Quiz</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
- 
-  :root{
-    --bg: #0d1321;
-    --panel: #131b2e;
-    --panel-border: #223051;
-    --cyan: #00d9ff;
-    --amber: #ffb703;
-    --green: #06d6a0;
-    --coral: #ef476f;
-    --text: #e8eef5;
-    --text-dim: #8a97b3;
-  }
- 
   *{ box-sizing: border-box; margin:0; padding:0; }
  
   body{
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-family: system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 32px 16px;
+    padding: 24px;
   }
  
-  .browser{
+  .quiz{
     width: 100%;
-    max-width: 640px;
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px -20px rgba(0,0,0,0.5);
+    max-width: 480px;
   }
  
-  .chrome{
-    background: #0a0f1c;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid var(--panel-border);
-  }
-  .dot{ width:11px; height:11px; border-radius:50%; }
-  .dot.r{ background:#ef476f55; border:1px solid var(--coral); }
-  .dot.y{ background:#ffb70355; border:1px solid var(--amber); }
-  .dot.g{ background:#06d6a055; border:1px solid var(--green); }
-  .addr{
-    flex:1;
-    background: #131b2e;
-    border: 1px solid var(--panel-border);
-    border-radius: 6px;
-    padding: 5px 12px;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  .addr::before{ content:"🔒"; font-size:10px; }
-  #status-chip{
-    font-family:'Space Mono',monospace;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--cyan);
-    color: var(--cyan);
-    white-space: nowrap;
-  }
- 
-  .packets{
-    display:flex;
-    gap: 5px;
-    padding: 14px 20px;
-    background: #0f1626;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--panel-border);
-  }
-  .packet{
-    width: 18px; height: 18px;
-    border-radius: 4px;
-    background: #1c2740;
-    border: 1px solid var(--panel-border);
-    transition: all .25s ease;
-  }
-  .packet.current{
-    border-color: var(--amber);
-    box-shadow: 0 0 0 3px #ffb70322;
-  }
-  .packet.correct{ background: var(--green); border-color: var(--green); }
-  .packet.wrong{ background: var(--coral); border-color: var(--coral); }
- 
-  .content{ padding: 28px 26px 26px; }
- 
-  .eyebrow{
-    font-family:'Space Mono', monospace;
-    font-size: 12px;
-    color: var(--cyan);
-    letter-spacing: 1px;
-    margin-bottom: 10px;
+  .count{
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 8px;
   }
  
   h1#question{
-    font-size: 21px;
-    line-height: 1.45;
-    font-weight: 700;
-    margin-bottom: 22px;
-    min-height: 60px;
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 20px;
   }
  
   .options{
     display: grid;
     gap: 10px;
+    margin-bottom: 16px;
   }
  
   .opt{
     text-align: left;
-    background: #16213e;
-    border: 1px solid var(--panel-border);
-    color: var(--text);
-    padding: 13px 16px;
-    border-radius: 9px;
-    font-size: 14.5px;
-    font-family: 'Inter', sans-serif;
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #1a1a1a;
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-size: 15px;
     cursor: pointer;
-    display:flex;
-    align-items:center;
-    gap: 12px;
-    transition: transform .12s ease, border-color .15s ease, background .15s ease;
   }
-  .opt:hover:not(:disabled){ border-color: var(--cyan); transform: translateX(3px); }
+  .opt:hover:not(:disabled){ border-color: #888; }
   .opt:disabled{ cursor: default; }
  
-  .opt .tag{
-    font-family:'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    border: 1px solid var(--panel-border);
-    border-radius: 5px;
-    padding: 2px 6px;
-  }
- 
-  .opt.correct{ background: #06d6a01a; border-color: var(--green); }
-  .opt.correct .tag{ color: var(--green); border-color: var(--green); }
-  .opt.wrong{ background: #ef476f1a; border-color: var(--coral); }
-  .opt.wrong .tag{ color: var(--coral); border-color: var(--coral); }
+  .opt.correct{ border-color: #2e7d32; background: #eaf7ea; }
+  .opt.wrong{ border-color: #c62828; background: #fbeaea; }
  
   .feedback{
-    margin-top: 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 12.5px;
-    color: var(--text-dim);
-    line-height: 1.6;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    margin-bottom: 20px;
     min-height: 20px;
   }
-  .feedback.show{ color: var(--text); }
  
   .footer-row{
     display:flex;
     justify-content: space-between;
     align-items:center;
-    margin-top: 22px;
   }
  
   .score{
-    font-family:'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--text-dim);
+    font-size: 14px;
+    color: #555;
   }
-  .score b{ color: var(--amber); }
  
   button.next{
-    background: var(--cyan);
-    color: #04121c;
+    background: #1a1a1a;
+    color: #fff;
     border: none;
-    font-weight: 700;
-    font-size: 13.5px;
-    padding: 10px 20px;
-    border-radius: 8px;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 6px;
     cursor: pointer;
-    font-family: 'Space Mono', monospace;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .2s ease, transform .1s ease;
   }
   button.next.show{ opacity: 1; pointer-events: all; }
-  button.next:hover{ transform: translateY(-1px); }
  
   /* results screen */
-  .results{ display:none; text-align:center; padding: 10px 4px 4px; }
+  .results{ display:none; text-align:center; }
   .results.show{ display:block; }
   .results .big{
-    font-family:'Space Mono', monospace;
-    font-size: 56px;
-    color: var(--cyan);
-    margin: 6px 0 4px;
+    font-size: 44px;
+    margin: 8px 0;
   }
   .results .verdict{
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 6px;
   }
-  .results p.sub{ color: var(--text-dim); font-size: 13px; margin-bottom: 24px; }
+  .results p.sub{ color: #777; font-size: 14px; margin-bottom: 24px; }
   .results button.next{ opacity:1; pointer-events:all; }
- 
-  @media (prefers-reduced-motion: reduce){
-    *{ transition: none !important; }
-  }
- 
-  @media (max-width: 480px){
-    .content{ padding: 22px 18px; }
-    h1#question{ font-size: 18px; }
-  }
 </style>
 </head>
 <body>
  
-<div class="browser">
-  <div class="chrome">
-    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-    <div class="addr">localhost/internet-and-web-tech-quiz</div>
-    <div id="status-chip">CONNECTING…</div>
+<div class="quiz">
+  <div id="quiz-screen">
+    <div class="count" id="q-count">Question 1 / 20</div>
+    <h1 id="question">Loading question…</h1>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="footer-row">
+      <div class="score">Score: <span id="score">0</span> / 20</div>
+      <button class="next" id="next-btn">Next</button>
+    </div>
   </div>
  
-  <div class="packets" id="packets"></div>
- 
-  <div class="content">
-    <div id="quiz-screen">
-      <div class="eyebrow" id="q-count">PACKET 1 / 20</div>
-      <h1 id="question">Loading question…</h1>
-      <div class="options" id="options"></div>
-      <div class="feedback" id="feedback"></div>
-      <div class="footer-row">
-        <div class="score">SCORE: <b id="score">0</b> / 20</div>
-        <button class="next" id="next-btn">NEXT →</button>
-      </div>
-    </div>
- 
-    <div class="results" id="results">
-      <div class="eyebrow">TRANSMISSION COMPLETE</div>
-      <div class="big" id="final-score">0/20</div>
-      <div class="verdict" id="verdict"></div>
-      <p class="sub" id="verdict-sub"></p>
-      <button class="next show" id="restart-btn">RECONNECT ↻</button>
-    </div>
+  <div class="results" id="results">
+    <div class="big" id="final-score">0/20</div>
+    <div class="verdict" id="verdict"></div>
+    <p class="sub" id="verdict-sub"></p>
+    <button class="next show" id="restart-btn">Restart</button>
   </div>
 </div>
  
@@ -288,16 +159,13 @@ let score = 0;
 let answered = false;
 let order = [];
 let previousOrder = null;
-const results = new Array(questions.length).fill(null); // 'correct' | 'wrong'
  
-const packetsEl = document.getElementById('packets');
 const qCountEl = document.getElementById('q-count');
 const questionEl = document.getElementById('question');
 const optionsEl = document.getElementById('options');
 const feedbackEl = document.getElementById('feedback');
 const scoreEl = document.getElementById('score');
 const nextBtn = document.getElementById('next-btn');
-const statusChip = document.getElementById('status-chip');
 const quizScreen = document.getElementById('quiz-screen');
 const resultsScreen = document.getElementById('results');
  
@@ -324,39 +192,19 @@ function generateOrder(){
   return newOrder;
 }
  
-function buildPackets(){
-  packetsEl.innerHTML = '';
-  questions.forEach((_, i) => {
-    const p = document.createElement('div');
-    p.className = 'packet';
-    p.id = 'packet-' + i;
-    packetsEl.appendChild(p);
-  });
-}
- 
 function renderQuestion(){
   answered = false;
   const item = questions[order[current]];
-  qCountEl.textContent = `PACKET ${current + 1} / ${questions.length}`;
+  qCountEl.textContent = `Question ${current + 1} / ${questions.length}`;
   questionEl.textContent = item.q;
   feedbackEl.textContent = '';
-  feedbackEl.classList.remove('show');
   nextBtn.classList.remove('show');
-  statusChip.textContent = 'CONNECTING…';
-  statusChip.style.color = 'var(--cyan)';
-  statusChip.style.borderColor = 'var(--cyan)';
- 
-  document.querySelectorAll('.packet').forEach((p, i) => {
-    p.classList.remove('current');
-    if (i === current) p.classList.add('current');
-  });
  
   optionsEl.innerHTML = '';
-  const labels = ['A','B','C','D'];
   item.opts.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'opt';
-    btn.innerHTML = `<span class="tag">${labels[i]}</span><span>${opt}</span>`;
+    btn.textContent = opt;
     btn.addEventListener('click', () => selectAnswer(i, btn));
     optionsEl.appendChild(btn);
   });
@@ -373,29 +221,12 @@ function selectAnswer(i, btn){
   allBtns[item.a].classList.add('correct');
   if (!correct) btn.classList.add('wrong');
  
-  const packetEl = document.getElementById('packet-' + current);
-  packetEl.classList.remove('current');
- 
-  if (correct){
-    score++;
-    results[current] = 'correct';
-    packetEl.classList.add('correct');
-    statusChip.textContent = '200 OK';
-    statusChip.style.color = 'var(--green)';
-    statusChip.style.borderColor = 'var(--green)';
-  } else {
-    results[current] = 'wrong';
-    packetEl.classList.add('wrong');
-    statusChip.textContent = '404 NOT FOUND';
-    statusChip.style.color = 'var(--coral)';
-    statusChip.style.borderColor = 'var(--coral)';
-  }
+  if (correct) score++;
  
   scoreEl.textContent = score;
-  feedbackEl.textContent = (correct ? '✔ Correct — ' : '✘ Not quite — ') + item.fact;
-  feedbackEl.classList.add('show');
+  feedbackEl.textContent = (correct ? 'Correct — ' : 'Not quite — ') + item.fact;
   nextBtn.classList.add('show');
-  nextBtn.textContent = current === questions.length - 1 ? 'SEE RESULTS →' : 'NEXT →';
+  nextBtn.textContent = current === questions.length - 1 ? 'See results' : 'Next';
 }
  
 function nextQuestion(){
@@ -414,27 +245,22 @@ function showResults(){
  
   let verdict, sub;
   const pct = score / questions.length;
-  if (pct === 1){ verdict = "Full bandwidth. Zero packet loss. 🏆"; sub = "You didn't just pass the quiz, you basically wrote the RFC."; }
-  else if (pct >= 0.8){ verdict = "Strong signal. Nicely routed. 📡"; sub = "You clearly know your way around the stack."; }
-  else if (pct >= 0.5){ verdict = "Connection stable, a few dropped packets. 🔧"; sub = "Solid grasp — a bit more revision and you're golden."; }
-  else { verdict = "Connection timed out. ⚠️"; sub = "Time to hit refresh on the fundamentals — you've got this."; }
+  if (pct === 1){ verdict = "Perfect score!"; sub = "You know this material inside out."; }
+  else if (pct >= 0.8){ verdict = "Great job!"; sub = "You clearly know your way around the stack."; }
+  else if (pct >= 0.5){ verdict = "Not bad."; sub = "Solid grasp — a bit more revision and you're golden."; }
+  else { verdict = "Keep practicing."; sub = "Time to revisit the fundamentals — you've got this."; }
  
   document.getElementById('verdict').textContent = verdict;
   document.getElementById('verdict-sub').textContent = sub;
-  statusChip.textContent = 'DONE';
-  statusChip.style.color = 'var(--amber)';
-  statusChip.style.borderColor = 'var(--amber)';
 }
  
 function restart(){
   current = 0;
   score = 0;
-  results.fill(null);
   scoreEl.textContent = 0;
   quizScreen.style.display = 'block';
   resultsScreen.classList.remove('show');
   order = generateOrder();
-  buildPackets();
   renderQuestion();
 }
  
@@ -442,7 +268,6 @@ nextBtn.addEventListener('click', nextQuestion);
 document.getElementById('restart-btn').addEventListener('click', restart);
  
 order = generateOrder();
-buildPackets();
 renderQuestion();
 </script>
  
