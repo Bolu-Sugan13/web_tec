@@ -177,12 +177,20 @@
           <a href="quizq.html" target="_blank" class="btn">View</a>
         </div>
       </article>
-            <article class="project-card">
+        <article class="project-card">
         <div class="project-thumb thumb-1"></div>
         <div class="project-body">
           <h3>Scientific calculator</h3>
           <p>Calculatore page which scintific calculation also included</p>
           <a href="calculator.html" target="_blank" class="btn">View</a>
+        </div>
+      </article>
+              <article class="project-card">
+        <div class="project-thumb thumb-1"></div>
+        <div class="project-body">
+          <h3>Employee details registration</h3>
+          <p>A simple page for employee detils regsitration, where you can store the basic details of the employee.</p>
+          <a href="employee.php" target="_blank" class="btn">View</a>
         </div>
       </article>
     </div>
