@@ -190,7 +190,7 @@
         <div class="project-body">
           <h3>Employee details registration</h3>
           <p>A simple page for employee detils regsitration, where you can store the basic details of the employee.</p>
-          <a href="employee.php" target="_blank" class="btn">View</a>
+          <a href="http://localhost/employee.php" target="_blank" class="btn">View</a>
         </div>
       </article>
     </div>
