@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information System</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="stylea.css">
+</head>
+<body>
+    <!-- Header Navigation Section -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fa-solid fa-cloud-sun-rain logo-icon"></i>
+                <h1 class="header-title">Weather Information</h1>
+            </div>
+            <span class="badge">AJAX & JSON Demo</span>
+        </div>
+    </header>
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Search Control Box -->
+        <section class="search-card">
+            <h2 class="search-title">Search Weather by City</h2>
+            <p class="search-subtitle">Fetches weather data asynchronously using JavaScript AJAX and JSON.</p>
+            <div class="search-box">
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-location-dot input-icon"></i>
+                    <input type="text" id="city-input" placeholder="Enter city name (e.g. Chennai, Mumbai, London)..." autocomplete="off">
+                </div>
+                <button id="search-btn" class="btn-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i> Get Weather
+                </button>
+            </div>
+            <!-- Quick Suggestion Chips -->
+            <div class="quick-cities">
+                <span class="quick-label">Try searching:</span>
+                <button class="city-chip" data-city="Chennai">Chennai</button>
+                <button class="city-chip" data-city="Mumbai">Mumbai</button>
+                <button class="city-chip" data-city="Delhi">Delhi</button>
+                <button class="city-chip" data-city="London">London</button>
+                <button class="city-chip" data-city="New York">New York</button>
+                <button class="city-chip" data-city="Tokyo">Tokyo</button>
+                <button class="city-chip" data-city="Paris">Paris</button>
+                <button class="city-chip" data-city="Sydney">Sydney</button>
+                <button class="city-chip" data-city="Singapore">Singapore</button>
+                <button class="city-chip" data-city="Berlin">Berlin</button>
+                <button class="city-chip" data-city="Toronto">Toronto</button>
+                <button class="city-chip" data-city="Cairo">Cairo</button>
+                <button class="city-chip" data-city="Rio de Janeiro">Rio de Janeiro</button>
+                <button class="city-chip" data-city="Moscow">Moscow</button>
+            </div>
+        </section>
+        <!-- Dynamic Status Message Container (Loading & Errors) -->
+        <div id="status-container" class="status-container hidden">
+            <!-- Loading message or Error messages are dynamically rendered here -->
+        </div>
+        <!-- Weather Display Card -->
+        <section id="weather-card" class="weather-card hidden">
+            <!-- Weather Card Header -->
+            <div class="card-header">
+                <div>
+                    <h2 id="city-name" class="city-name">City Name</h2>
+                    <p class="api-endpoint-text">
+                        <i class="fa-solid fa-link"></i> Endpoint: 
+                        <code id="api-url-display">https://example.com/api/weather?city=...</code>
+                    </p>
+                </div>
+                <div id="condition-badge" class="condition-badge">
+                    <i class="fa-solid fa-cloud"></i>
+                    <span id="condition">Condition</span>
+                </div>
+            </div>
+            <!-- Main Temperature & Icon Grid -->
+            <div class="weather-main-grid">
+                <div class="temperature-box">
+                    <div class="temp-value-wrapper">
+                        <span id="temperature" class="temp-number">--</span>
+                        <span class="temp-unit">°C</span>
+                    </div>
+                    <p class="temp-label">Current Temperature</p>
+                </div>
+                <div class="weather-icon-box">
+                    <div id="weather-dynamic-icon" class="weather-dynamic-icon">
+                        <i class="fa-solid fa-sun weather-hero-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- Detailed Weather Metrics Grid -->
+            <div class="metrics-grid">               
+                <!-- Humidity Metric -->
+                <div class="metric-card">
+                    <div class="metric-icon-wrapper humidity-icon">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Humidity</span>
+                        <span class="metric-value"><span id="humidity">--</span>%</span>
+                    </div>
+                </div>
+                <!-- Wind Speed Metric -->
+                <div class="metric-card">
+                    <div class="metric-icon-wrapper wind-icon">
+                        <i class="fa-solid fa-wind"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Wind Speed</span>
+                        <span class="metric-value"><span id="wind-speed">--</span> km/h</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Weather Description Box -->
+            <div class="description-box">
+                <h3><i class="fa-solid fa-align-left"></i> Weather Description</h3>
+                <p id="description" class="description-text">Detailed weather description will appear here.</p>
+            </div>
+            <!-- Live JSON Response Inspection Box (Demonstrates AJAX & JSON in action) -->
+            <div class="json-inspector">
+                <div class="json-inspector-header">
+                    <span><i class="fa-solid fa-code"></i> Received Raw JSON Response (AJAX Data Payload)</span>
+                    <span class="json-tag">JSON Object</span>
+                </div>
+                <pre id="json-raw-display" class="json-code"><code>{ }</code></pre>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Weather Information System • Built with HTML5, CSS3, Vanilla JavaScript, AJAX & JSON</p>
+    </footer>
+    <!-- Custom JavaScript -->
+    <script src="scripta.js"></script>
+</body>
+</html>
