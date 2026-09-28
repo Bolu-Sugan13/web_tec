@@ -1,0 +1,192 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f6f8;
+    color: #333;
+}
+
+.header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin-bottom: 8px;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.btn {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.btn-add {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-update {
+    background: #2980b9;
+    color: white;
+}
+
+.btn-edit {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-delete {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-cancel {
+    background: #7f8c8d;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    flex: 1;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #34495e;
+    color: white;
+}
+
+tr:hover {
+    background: #f5f5f5;
+}
+
+.actions {
+    display: flex;
+    gap: 5px;
+}
+
+.message {
+    background: #ffeaa7;
+    color: #6c5100;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.message.success {
+    background: #d5f5e3;
+    color: #196f3d;
+}
+
+.message.error {
+    background: #fadbd8;
+    color: #922b21;
+}
+
+.empty {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .container {
+        width: 95%;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    th,
+    td {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management System</title>
+    <link rel="stylesheet" href="contactstyle.css">
+</head>
+<body>
+
+<header class="header">
+    <h1>Contact Management System</h1>
+    <p>Manage your contacts easily</p>
+</header>
+
+<main class="container">
+
+    <div id="message" class="message hidden"></div>
+
+    <section class="card">
+        <h2 id="formTitle">Add New Contact</h2>
+
+        <form id="contactForm">
+            <input type="hidden" id="contactId">
+
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" placeholder="Enter contact name">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone *</label>
+                <input type="text" id="phone" placeholder="Enter phone number">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter email address">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" placeholder="Enter address"></textarea>
+            </div>
+
+            <button type="submit" id="submitButton" class="btn btn-add">
+                Add Contact
+            </button>
+
+            <button type="button" id="cancelButton" class="btn btn-cancel hidden">
+                Cancel
+            </button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Contact List</h2>
+
+        <form id="searchForm" class="search-box">
+            <input type="text" id="search" placeholder="Search by name, phone or email">
+            <button type="submit" class="btn btn-update">Search</button>
+            <button type="button" id="clearSearch" class="btn btn-cancel">Clear</button>
+        </form>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="contactTableBody">
+                    <tr>
+                        <td colspan="6" class="empty">Loading contacts...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<script src="contactscript.js"></script>
+</body>
+</html>
