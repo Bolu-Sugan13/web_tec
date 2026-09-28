@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Employee Hub</title>
+    <link rel="stylesheet" href="styleemployee.css">
+</head>
+<body class="auth-page">
+<div class="auth-card">
+    <a class="back-link" href="employeeindex.html">← Back to Dashboard</a>
+    <div class="auth-logo">EH</div>
+    <p class="eyebrow">WELCOME BACK</p>
+    <h1>Login to EmployeeHub</h1>
+    <p class="muted">Use your registered account to continue.</p>
+
+    <form action="php/login.php" method="POST" class="form">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <button class="btn primary full" type="submit">Login</button>
+    </form>
+
+    <p class="form-footer">Don't have an account? <a href="employeeregister.html">Register here</a></p>
+</div>
+<script src="scriptemployee.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Employee Hub</title>
+    <link rel="stylesheet" href="styleemployee.css">
+</head>
+<body class="auth-page">
+<div class="auth-card">
+    <a class="back-link" href="employeeindex.html">← Back to Dashboard</a>
+    <div class="auth-logo">EH</div>
+    <p class="eyebrow">CREATE ACCOUNT</p>
+    <h1>Register</h1>
+    <p class="muted">Create an account to access the employee form.</p>
+
+    <form action="php/register.php" method="POST" class="form">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Minimum 6 characters" minlength="6" required>
+
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" placeholder="Re-enter password" minlength="6" required>
+
+        <button class="btn primary full" type="submit">Create Account</button>
+    </form>
+
+    <p class="form-footer">Already registered? <a href="employeelogin.html">Login here</a></p>
+</div>
+<script src="scriptemployee.js"></script>
+</body>
+</html>

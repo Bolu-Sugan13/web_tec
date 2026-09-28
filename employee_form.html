@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Details | Employee Hub</title>
+    <link rel="stylesheet" href="styleemployee.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">Employee<span>Hub</span></div>
+    <nav>
+        <a href="employeeindex.html">Dashboard</a>
+        <a href="employeelogin.html">Login</a>
+        <a href="employeeregister.html">Register</a>
+    </nav>
+</header>
+
+<main class="form-page">
+    <div class="page-title">
+        <p class="eyebrow">EMPLOYEE RECORD</p>
+        <h1>Employee Details Form</h1>
+        <p>Fill in the employee's personal, contact, emergency and employment information.</p>
+    </div>
+
+    <form action="php/employee_save.php" method="POST" class="employee-form">
+        <section class="form-section">
+            <div class="section-title"><span>01</span><div><h2>Personal Information</h2><p>Basic employee identity details</p></div></div>
+            <div class="form-grid">
+                <div class="field full-width"><label>Full Name</label><input type="text" name="full_name" required></div>
+                <div class="field"><label>Date of Birth</label><input type="date" name="date_of_birth" required></div>
+                <div class="field"><label>Gender</label>
+                    <select name="gender" required>
+                        <option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
+                    </select>
+                </div>
+                <div class="field full-width"><label>Government ID</label><input type="text" name="government_id" placeholder="National ID / Passport / Tax ID" required></div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title"><span>02</span><div><h2>Contact Details</h2><p>Current communication information</p></div></div>
+            <div class="form-grid">
+                <div class="field"><label>Phone Number</label><input type="tel" name="phone" required></div>
+                <div class="field"><label>Email Address</label><input type="email" name="email" required></div>
+                <div class="field full-width"><label>Residential Address</label><textarea name="address" rows="3" required></textarea></div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title"><span>03</span><div><h2>Emergency Contact</h2><p>Person to contact in an emergency</p></div></div>
+            <div class="form-grid">
+                <div class="field"><label>Contact Name</label><input type="text" name="emergency_name" required></div>
+                <div class="field"><label>Contact Phone</label><input type="tel" name="emergency_phone" required></div>
+                <div class="field full-width"><label>Relationship</label><input type="text" name="emergency_relationship" placeholder="Parent, spouse, sibling, etc." required></div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title"><span>04</span><div><h2>Employment Details</h2><p>Professional information</p></div></div>
+            <div class="form-grid">
+                <div class="field"><label>Job Title</label><input type="text" name="job_title" required></div>
+                <div class="field"><label>Department</label><input type="text" name="department" required></div>
+                <div class="field"><label>Start Date</label><input type="date" name="start_date" required></div>
+                <div class="field"><label>Employment Type</label>
+                    <select name="employment_type" required>
+                        <option value="">Select type</option><option>Full-time</option><option>Part-time</option><option>Contract</option>
+                    </select>
+                </div>
+                <div class="field full-width"><label>Reporting Manager</label><input type="text" name="reporting_manager" required></div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <a class="btn secondary" href="employeeindex.html">Cancel</a>
+            <button class="btn primary" type="submit">Save Employee Details</button>
+        </div>
+    </form>
+</main>
+<footer>EmployeeHub &copy; 2026 | MCA Portfolio Project</footer>
+<script src="scriptemployee.js"></script>
+</body>
+</html>
