@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Management System</title>
+    <link rel="stylesheet" href="stylecompany.css">
+    </head>
+<body>
+<nav>
+    <div class="logo">
+        <a href="index.html" style="color:white;text-decoration:none;">
+            Company Portal
+        </a>
+    </div>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#register">Register</a>
+        <a href="#login">Login</a>
+        <a href="#dashboard">Dashboard</a>
+    </div>
+</nav>
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>Welcome to Company Management System</h1>
+
+        <p>
+            A simple company portal where employees and administrators
+            can register, login, and securely access company information.
+        </p>
+
+        <a href="#register" class="button">
+            Register Now
+        </a>
+
+        <a href="#login" class="button">
+            Login
+        </a>
+    </div>
+</section>
+
+<section id="register">
+    <div class="form-container">
+        <h2>Registration</h2>
+
+        <form>
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <select name="role" required>
+                <option value="">
+                    Select Role
+                </option>
+
+                <option value="employee">
+                    Employee
+                </option>
+
+                <option value="admin">
+                    Admin
+                </option>
+            </select>
+
+            <button type="button" onclick="demoMessage()">
+                Register
+            </button>
+        </form>
+    </div>
+</section>
+
+<section id="login">
+    <div class="form-container">
+        <h2>Login</h2>
+
+        <form>
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="button" onclick="demoMessage()">
+                Login
+            </button>
+        </form>
+    </div>
+</section>
+
+<section id="dashboard">
+    <div class="dashboard">
+
+        <h1>Company Dashboard</h1>
+
+        <p>
+            This is the standalone HTML preview of the dashboard.
+        </p>
+
+        <h2>Employee Details</h2>
+        <br>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Registered Date</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td>Sample Employee</td>
+                <td>employee@example.com</td>
+                <td>Employee</td>
+                <td>2026-09-25</td>
+            </tr>
+        </table>
+
+        <br><br>
+
+        <h2>Admin Details</h2>
+        <br>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Registered Date</th>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Sample Admin</td>
+                <td>admin@example.com</td>
+                <td>Admin</td>
+                <td>2026-09-25</td>
+            </tr>
+        </table>
+
+    </div>
+</section>
+
+<script>
+function demoMessage() {
+    alert(
+        "This is the standalone HTML version. " +
+        "Registration and login require the PHP backend."
+    );
+}
+</script>
+
+</body>
+</html>
