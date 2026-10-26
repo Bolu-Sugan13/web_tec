@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSpace | Digital Library</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f6f7fb;
+            color: #20243a;
+        }
+
+        header {
+            background: #171a30;
+            color: white;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        nav a {
+            color: #dddff0;
+            text-decoration: none;
+            margin-left: 22px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #c4b5fd;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, #222747, #5541a5);
+            color: white;
+            padding: 65px 7%;
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 48px);
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            color: #e1def7;
+            max-width: 580px;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.86;
+            transform: translateY(-1px);
+        }
+
+        .search-btn {
+            background: #a78bfa;
+            color: #171a30;
+        }
+
+        main {
+            padding: 40px 7%;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e8e9f1;
+        }
+
+        .stat-card p {
+            color: #73778c;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h2 {
+            font-size: 28px;
+            color: #5541a5;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h2 {
+            font-size: 25px;
+        }
+
+        .section-heading p {
+            color: #777b8d;
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .controls select {
+            background: white;
+            border: 1px solid #dfe1eb;
+            border-radius: 8px;
+            padding: 11px;
+            color: #33374d;
+        }
+
+        .load-btn {
+            background: #5541a5;
+            color: white;
+        }
+
+        .reset-btn {
+            background: #e9e6f8;
+            color: #5541a5;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .book-card {
+            background: white;
+            border: 1px solid #e8e9f1;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.25s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px #20243a12;
+        }
+
+        .book-cover {
+            height: 185px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 22px;
+            background: #eeebfa;
+        }
+
+        .cover-design {
+            width: 115px;
+            height: 145px;
+            background: #5541a5;
+            color: white;
+            padding: 18px 12px;
+            box-shadow: 5px 5px 0 #d2c8f3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .cover-design span {
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .cover-design strong {
+            font-size: 16px;
+            overflow-wrap: anywhere;
+        }
+
+        .book-info {
+            padding: 17px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #f0edff;
+            color: #5541a5;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        .book-info h3 {
+            font-size: 17px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .author {
+            font-size: 13px;
+            color: #777b8d;
+            margin-bottom: 16px;
+        }
+
+        .book-bottom {
+            border-top: 1px solid #eeeef4;
+            padding-top: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .book-bottom strong {
+            font-size: 15px;
+        }
+
+        .book-bottom button {
+            background: #171a30;
+            color: white;
+            font-size: 12px;
+            padding: 9px 11px;
+        }
+
+        #message {
+            color: #777b8d;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            background: #171a30;
+            color: #bfc2d5;
+            text-align: center;
+            padding: 25px;
+            margin-top: 45px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1000px) {
+            .book-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding: 20px 5%;
+            }
+
+            nav a {
+                margin-left: 0;
+                margin-right: 14px;
+            }
+
+            .hero, main {
+                padding: 35px 5%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .book-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .book-cover {
+                height: 155px;
+            }
+
+            .cover-design {
+                height: 120px;
+                width: 95px;
+                padding: 12px 8px;
+            }
+
+            .book-info {
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Book<span>Space.</span></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#library">Library</a>
+        <a href="#about">About</a>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <h1>Your next chapter<br>starts here.</h1>
+
+    <p>
+        Discover inspiring stories, explore new ideas, and find
+        your next favourite book in your personal digital library.
+    </p>
+
+    <div class="search-box">
+        <input type="text" id="searchInput"
+               placeholder="Search by book title or author...">
+
+        <button class="search-btn" id="searchBtn">
+            Search Books
+        </button>
+    </div>
+</section>
+
+<main id="library">
+
+    <div class="stats">
+        <div class="stat-card">
+            <p>Total Books</p>
+            <h2 id="totalBooks">8</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Categories</p>
+            <h2 id="totalCategories">5</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Library Status</p>
+            <h2 style="font-size:22px">Active</h2>
+        </div>
+    </div>
+
+    <div class="section-heading">
+        <div>
+            <h2>Explore Our Collection</h2>
+            <p>Handpicked reads for curious minds.</p>
+        </div>
+
+        <button class="load-btn" id="loadBooks">
+            Load Books via AJAX
+        </button>
+    </div>
+
+    <div class="controls">
+        <select id="categoryFilter">
+            <option value="All">All Categories</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science">Science</option>
+            <option value="Technology">Technology</option>
+            <option value="Self-help">Self-help</option>
+            <option value="Biography">Biography</option>
+        </select>
+
+        <button class="reset-btn" id="resetBtn">
+            Reset Filters
+        </button>
+    </div>
+
+    <div id="message" role="status" aria-live="polite">
+        Showing default books.
+    </div>
+
+    <div class="book-grid" id="bookList"></div>
+
+</main>
+
+<footer id="about">
+    <p>BookSpace Digital Library | Learn. Explore. Grow.</p>
+    <p style="margin-top:8px">Built using HTML, CSS, jQuery and AJAX.</p>
+</footer>
+
+<script>
+    // Default books displayed when the page opens
+    const defaultBooks = [
+        {
+            title: "The Alchemist",
+            author: "Paulo Coelho",
+            category: "Fiction",
+            color: "#805ad5"
+        },
+        {
+            title: "Wings of Fire",
+            author: "A. P. J. Abdul Kalam",
+            category: "Biography",
+            color: "#b45309"
+        },
+        {
+            title: "Atomic Habits",
+            author: "James Clear",
+            category: "Self-help",
+            color: "#0f766e"
+        },
+        {
+            title: "Clean Code",
+            author: "Robert C. Martin",
+            category: "Technology",
+            color: "#334155"
+        },
+        {
+            title: "A Brief History of Time",
+            author: "Stephen Hawking",
+            category: "Science",
+            color: "#1d4ed8"
+        },
+        {
+            title: "Harry Potter",
+            author: "J. K. Rowling",
+            category: "Fiction",
+            color: "#9f1239"
+        },
+        {
+            title: "Think Like a Monk",
+            author: "Jay Shetty",
+            category: "Self-help",
+            color: "#a16207"
+        },
+        {
+            title: "The Pragmatic Programmer",
+            author: "David Thomas",
+            category: "Technology",
+            color: "#4338ca"
+        }
+    ];
+
+    let books = [...defaultBooks];
+
+    // Display books on the page
+    function displayBooks(bookData) {
+        $("#bookList").empty();
+
+        $("#totalBooks").text(bookData.length);
+
+        const categories = new Set(
+            bookData.map(book => book.category)
+        );
+
+        $("#totalCategories").text(categories.size);
+
+        if (bookData.length === 0) {
+            $("#message").text("No books found. Try another search.");
+            return;
+        }
+
+        $("#message").text("Showing " + bookData.length + " book(s).");
+
+        $.each(bookData, function(index, book) {
+            const title = $("<div>").text(book.title || "Unknown title").html();
+            const author = $("<div>").text(book.author || "Unknown author").html();
+            const category = $("<div>").text(book.category || "Other").html();
+            const color = /^#[0-9a-f]{6}$/i.test(book.color || "")
+                ? book.color : "#5541a5";
+
+            const card = `
+                <article class="book-card">
+                    <div class="book-cover">
+                        <div class="cover-design"
+                             style="background:${color}">
+                            <span>BOOKSPACE LIBRARY</span>
+                            <strong>${title}</strong>
+                            <span>READ • DISCOVER</span>
+                        </div>
+                    </div>
+
+                    <div class="book-info">
+                        <span class="category">${category}</span>
+                        <h3>${title}</h3>
+                        <p class="author">By ${author}</p>
+
+                        <div class="book-bottom">
+                            <strong>Book #${index + 1}</strong>
+                            <button class="detailsBtn"
+                                data-title="${encodeURIComponent(book.title || "Unknown title")}"
+                                data-author="${encodeURIComponent(book.author || "Unknown author")}"
+                                data-category="${encodeURIComponent(book.category || "Other")}">
+                                Details
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `;
+
+            $("#bookList").append(card);
+        });
+    }
+
+    // Search and category filtering
+    function filterBooks() {
+        const search = $("#searchInput").val().toLowerCase().trim();
+        const category = $("#categoryFilter").val();
+
+        const filtered = books.filter(function(book) {
+            const matchesSearch =
+                (book.title || "").toLowerCase().includes(search) ||
+                (book.author || "").toLowerCase().includes(search);
+
+            const matchesCategory =
+                category === "All" || book.category === category;
+
+            return matchesSearch && matchesCategory;
+        });
+
+        displayBooks(filtered);
+    }
+
+    $(document).ready(function() {
+
+        // Display the default collection immediately
+        displayBooks(books);
+
+        $("#searchBtn").click(filterBooks);
+
+        $("#searchInput").on("input", filterBooks);
+
+        $("#categoryFilter").change(filterBooks);
+
+        $("#resetBtn").click(function() {
+            $("#searchInput").val("");
+            $("#categoryFilter").val("All");
+            displayBooks(books);
+        });
+
+        // Fetch books from the API using jQuery AJAX
+        $("#loadBooks").click(function() {
+            $("#message").text("Loading books from the API...");
+
+            $.ajax({
+                url: "https://openlibrary.org/search.json?q=harry+potter&limit=8",
+                method: "GET",
+                dataType: "json",
+                timeout: 15000,
+
+                success: function(data) {
+                    const apiBooks = (data.docs || []).map(function(book) {
+                        return {
+                            title: book.title || "Unknown title",
+                            author: book.author_name
+                                ? book.author_name.join(", ")
+                                : "Unknown author",
+                            category: "Fiction",
+                            color: "#5541a5"
+                        };
+                    });
+
+                    if (apiBooks.length > 0) {
+                        books = apiBooks;
+                        $("#searchInput").val("");
+                        $("#categoryFilter").val("All");
+                        displayBooks(books);
+                        $("#message").text("Books loaded successfully from Open Library.");
+                    } else {
+                        $("#message").text("No books returned. Your default books are still available.");
+                    }
+                },
+
+                error: function(xhr, status, error) {
+                    $("#message").text(
+                        "Could not load API data. Your default books are still available."
+                    );
+                    console.log("AJAX error:", status, error);
+                    console.log("HTTP status:", xhr.status);
+                }
+            });
+        });
+
+        // Show details when a card button is clicked
+        $("#bookList").on("click", ".detailsBtn", function() {
+            const title = decodeURIComponent($(this).attr("data-title"));
+            const author = decodeURIComponent($(this).attr("data-author"));
+            const category = decodeURIComponent($(this).attr("data-category"));
+
+            alert(
+                "Book Details\n\nTitle: " + title +
+                "\nAuthor: " + author +
+                "\nCategory: " + category
+            );
+        });
+    });
+</script>
+
+</body>
+</html>
